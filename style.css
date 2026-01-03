@@ -97,6 +97,7 @@ body {
     display: flex; 
     gap: 10px; 
     margin-bottom: 10px; 
+    width: 100%;
 }
 .btn-undo { 
     background: #475569; 
@@ -118,7 +119,7 @@ input {
 .btn-row { 
     display: grid; 
     grid-template-columns: 1fr 1fr; 
-    gap: 10px; 
+    gap: 10px;
 }
 button { 
     border: none; 
@@ -208,4 +209,5 @@ th, td {
     margin-top: 30px; 
 
 }
+
 

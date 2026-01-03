@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Capital's Shield</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.1.0"></script>
+</head>
+<body>
+    <div class="app-container">
+        <div id="main-page" class="page active">
+            <div class="header">
+                <div class="title-container">
+                    <h1>🛡️ Capital's Shield <span class="subtitle">by Ace</span></h1>
+                </div>
+                <button class="icon-btn" onclick="togglePage('settings-page')">⚙️ Settings</button>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card"><span class="stat-label">Acct Bal</span><span id="stat-bal" class="stat-value">$0</span></div>
+                <div class="stat-card"><span class="stat-label">Daily Tgt</span><span id="stat-tgt" class="stat-value">$0</span></div>
+                <div class="stat-card"><span class="stat-label">Daily Stop</span><span id="stat-stop" class="stat-value">$0</span></div>
+                <div class="stat-card highlight"><span class="stat-label">Next Risk</span><span id="stat-risk" class="stat-value">$0</span></div>
+                <div class="stat-card"><span class="stat-label">Today PnL</span><span id="stat-pnl" class="stat-value">$0</span></div>
+                <div class="stat-card"><span class="stat-label">Pool Left</span><span id="stat-pool" class="stat-value">$0</span></div>
+            </div>
+
+            <div id="chart-container">
+                <canvas id="equityChart"></canvas>
+            </div>
+
+            <div id="status-note" class="status-banner"></div>
+
+            <div class="controls">
+                <div class="input-undo-row">
+                    <input type="number" id="manual-pnl" placeholder="Manual PnL (Optional)" step="any">
+                    <button class="btn-undo" onclick="undoTrade()" title="Undo">⟲</button>
+                </div>
+                <div class="btn-row">
+                    <button class="btn-win" onclick="handleTrade('win')">WIN</button>
+                    <button class="btn-loss" onclick="handleTrade('loss')">LOSS</button>
+                </div>
+                <button id="new-day-btn" class="btn-new-day" onclick="startNewDay()">🌅 START NEW DAY</button>
+            </div>
+
+            <div class="tabs">
+                <div id="tab-hist" class="tab active" onclick="switchTab('hist')">History</div>
+                <div id="tab-win" class="tab" onclick="switchTab('win')">Win Map</div>
+                <div id="tab-loss" class="tab" onclick="switchTab('loss')">Loss Map</div>
+            </div>
+
+            <div class="content-area">
+                <table id="data-table">
+                    <thead><tr id="table-head"></tr></thead>
+                    <tbody id="table-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="settings-page" class="page">
+            <div class="header">
+                <h1>Settings</h1>
+                <button id="btn-settings-done" onclick="tryCloseSettings()">Done</button>
+            </div>
+            
+            <div class="settings-grid">
+                <div class="setting-item">
+                    <label>Account Balance ($)</label>
+                    <input type="number" id="set-balance" min="1" max="1000000">
+                    <div id="fb-balance" class="setting-feedback"></div>
+                </div>
+                <div class="setting-item">
+                    <label>R:R Goal (Ratio)</label>
+                    <input type="number" id="set-rr" step="0.1">
+                    <div id="fb-rr" class="setting-feedback"></div>
+                </div>
+                <div class="setting-item">
+                    <label>Daily Risk Limit (%)</label>
+                    <input type="number" id="set-daily-risk" step="0.1">
+                    <div id="fb-daily-risk" class="setting-feedback"></div>
+                </div>
+                <div class="setting-item">
+                    <label>Daily Target (%)</label>
+                    <input type="number" id="set-daily-target" step="0.1">
+                    <div id="fb-daily-target" class="setting-feedback"></div>
+                </div>
+                <div class="setting-item">
+                    <label>Max Risk / Trade (%)</label>
+                    <input type="number" id="set-max-risk" step="0.1">
+                    <div id="fb-max-risk" class="setting-feedback"></div>
+                </div>
+                <div class="setting-item">
+                    <label>Compound Risk %</label>
+                    <input type="number" id="set-compound" step="1">
+                    <div id="fb-compound" class="setting-feedback"></div>
+                </div>
+            </div>
+            <button class="btn-reset" onclick="resetApp()">🚨 RESET ALL DATA</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

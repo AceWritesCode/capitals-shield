@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -8,6 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.1.0"></script>
 </head>
+
 <body>
     <div class="app-container">
         <div id="main-page" class="page active">
@@ -19,12 +21,18 @@
             </div>
 
             <div class="stats-grid">
-                <div class="stat-card"><span class="stat-label">Acct Bal</span><span id="stat-bal" class="stat-value">$0</span></div>
-                <div class="stat-card"><span class="stat-label">Daily Tgt</span><span id="stat-tgt" class="stat-value">$0</span></div>
-                <div class="stat-card"><span class="stat-label">Daily Stop</span><span id="stat-stop" class="stat-value">$0</span></div>
-                <div class="stat-card highlight"><span class="stat-label">Next Risk</span><span id="stat-risk" class="stat-value">$0</span></div>
-                <div class="stat-card"><span class="stat-label">Today PnL</span><span id="stat-pnl" class="stat-value">$0</span></div>
-                <div class="stat-card"><span class="stat-label">Pool Left</span><span id="stat-pool" class="stat-value">$0</span></div>
+                <div class="stat-card"><span class="stat-label">Acct Bal</span><span id="stat-bal"
+                        class="stat-value">$0</span></div>
+                <div class="stat-card"><span class="stat-label">Daily Tgt</span><span id="stat-tgt"
+                        class="stat-value">$0</span></div>
+                <div class="stat-card"><span class="stat-label">Daily Stop</span><span id="stat-stop"
+                        class="stat-value">$0</span></div>
+                <div class="stat-card highlight"><span class="stat-label">Next Risk</span><span id="stat-risk"
+                        class="stat-value">$0</span></div>
+                <div class="stat-card"><span class="stat-label">Today PnL</span><span id="stat-pnl"
+                        class="stat-value">$0</span></div>
+                <div class="stat-card"><span class="stat-label">Pool Left</span><span id="stat-pool"
+                        class="stat-value">$0</span></div>
             </div>
 
             <div id="chart-container">
@@ -47,13 +55,15 @@
 
             <div class="tabs">
                 <div id="tab-hist" class="tab active" onclick="switchTab('hist')">History</div>
-                <div id="tab-win" class="tab" onclick="switchTab('win')">Win Map</div>
-                <div id="tab-loss" class="tab" onclick="switchTab('loss')">Loss Map</div>
+                <div id="tab-win" class="tab" onclick="switchTab('win')">Win Streak Map</div>
+                <div id="tab-loss" class="tab" onclick="switchTab('loss')">Loss Streak Map</div>
             </div>
 
             <div class="content-area">
                 <table id="data-table">
-                    <thead><tr id="table-head"></tr></thead>
+                    <thead>
+                        <tr id="table-head"></tr>
+                    </thead>
                     <tbody id="table-body"></tbody>
                 </table>
             </div>
@@ -64,7 +74,7 @@
                 <h1>Settings</h1>
                 <button id="btn-settings-done" onclick="tryCloseSettings()">Done</button>
             </div>
-            
+
             <div class="settings-grid">
                 <div class="setting-item">
                     <label>Account Balance ($)</label>
@@ -99,9 +109,84 @@
             </div>
             <button class="btn-reset" onclick="resetApp()">🚨 RESET ALL DATA</button>
         </div>
+        <div id="growth-page" class="page">
+            <div class="header">
+                <h1>📈 Account Analytics</h1>
+                <button id="btn-growth-back">Back</button>
+            </div>
+            <div class="stats-summary-grid">
+                <div class="summary-card">
+                    <span class="label">Win Rate</span>
+                    <div class="win-rate-container">
+                        <canvas id="winRateChart"></canvas>
+                        <span id="stat-win-rate" class="center-percentage">0%</span>
+                    </div>
+                </div>
+                <div class="summary-grid-small">
+                    <div class="small-card"><span class="label">Profit Factor</span><span id="stat-pf"
+                            class="value">0.0</span></div>
+                    <div class="small-card"><span class="label">Avg RR</span><span id="stat-avg-rr"
+                            class="value">0.0R</span></div>
+                    <div class="small-card"><span class="label">Expectancy</span><span id="stat-expect"
+                            class="value">$0</span></div>
+                    <div class="small-card"><span class="label">Net PnL</span><span id="stat-total-pnl"
+                            class="value">$0</span></div>
+                </div>
+            </div>
+            <div class="section-title">Equity Curve</div>
+            <div id="growth-chart-container" class="chart-box">
+                <canvas id="growthChart"></canvas>
+            </div>
+            <div class="calendar-section">
+                <div class="calendar-header">
+                    <span id="calendar-month-year">Month Year</span>
+                    <div class="cal-nav">
+                        <button onclick="changeMonth(-1)">◀</button>
+                        <button onclick="changeMonth(1)">▶</button>
+                    </div>
+                </div>
+                <div class="calendar-grid-header">
+                    <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                </div>
+                <div id="calendar-grid" class="calendar-grid"></div>
+            </div>
+
+            <div class="section-title">Daily Performance</div>
+            <div id="daily-log-container" class="accordion-list">
+            </div>
+        </div>
+        <div id="day-detail-page" class="page">
+            <div class="header">
+                <h1 id="detail-date">4 Jan 2026</h1>
+                <button onclick="togglePage('growth-page')">Back</button>
+            </div>
+
+            <div class="detail-summary-row">
+                <div class="detail-stat"><span>Net PnL</span><b id="detail-pnl">$0</b></div>
+                <div class="detail-stat"><span>Trades</span><b id="detail-trades">0</b></div>
+                <div class="detail-stat"><span>Win Rate</span><b id="detail-winrate">0%</b></div>
+            </div>
+
+            <div class="chart-box mini-detail">
+                <canvas id="dayDetailChart"></canvas>
+            </div>
+
+            <div class="content-area">
+                <table class="detail-table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Type</th>
+                            <th>PnL</th>
+                            <th>RR</th>
+                        </tr>
+                    </thead>
+                    <tbody id="detail-table-body"></tbody>
+                </table>
+            </div>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
 
 </html>
-

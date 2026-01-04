@@ -11,208 +11,585 @@
 /* 1. THE BACKGROUND: Always full screen */
 body {
     font-family: system-ui, -apple-system, sans-serif;
-    background-color:#0f172a; /* Outer letterbox color */
+    background-color: #0f172a;
+    /* Outer letterbox color */
     color: var(--text);
     margin: 0;
     padding: 0;
     display: flex;
-    justify-content: center; /* Centers the container horizontally */
+    justify-content: center;
+    /* Centers the container horizontally */
     min-height: 100vh;
-    overflow-y: auto; /* Enables natural scrolling for the whole page */
+    overflow-y: auto;
+    /* Enables natural scrolling for the whole page */
 }
 
 /* 2. THE CONTAINER: Locked width on PC, full width on Mobile */
 .app-container {
-    background-color: var(--bg); /* Actual app background */
+    background-color: var(--bg);
+    /* Actual app background */
     width: 100%;
-    max-width: 550px; /* THIS LOCKS THE WIDTH ON PC */
+    max-width: 550px;
+    /* THIS LOCKS THE WIDTH ON PC */
     min-height: 100vh;
     padding: 30px;
     margin-top: 20px;
     margin-bottom: 20px;
     box-sizing: border-box;
-    box-shadow: 0 0 80px rgba(0,0,0,0.5); /* Adds depth on PC */
-    border-radius:12px ;
+    box-shadow: 0 0 80px rgba(0, 0, 0, 0.5);
+    /* Adds depth on PC */
+    border-radius: 12px;
     display: flex;
     flex-direction: column;
 }
 
 /* Header & Title */
-.header { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    margin-bottom: 20px; 
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 }
-.title-container h1 { 
-    font-size: 1.5rem; 
-    margin: 0; 
-    display: flex; 
-    align-items: baseline; 
-    gap: 8px; 
+
+.title-container h1 {
+    font-size: 1.5rem;
+    margin: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
 }
-.subtitle { 
-    font-size: 0.7rem; 
-    color: var(--primary); 
-    font-weight: bold; 
+
+.subtitle {
+    font-size: 0.7rem;
+    color: var(--primary);
+    font-weight: bold;
 }
 
 /* Grid Stats - Forced 3 columns */
-.stats-grid { 
-    display: grid; 
-    grid-template-columns: repeat(3, 1fr); 
-    gap: 8px; 
-    margin-bottom: 15px; 
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 15px;
 }
-.stat-card { 
-    background: var(--card); 
-    padding: 10px 5px; 
-    border-radius: 8px; 
-    text-align: center; 
-    border: 1px solid var(--border); 
+
+.stat-card {
+    background: var(--card);
+    padding: 10px 5px;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid var(--border);
 }
-.stat-card.highlight { border-color: var(--primary); }
-.stat-label { font-size: 0.65rem; color: #94a3b8; display: block; margin-bottom: 4px; }
-.stat-value { font-size: 0.85rem; font-weight: bold; }
+
+.stat-card.highlight {
+    border-color: var(--primary);
+}
+
+.stat-label {
+    font-size: 0.65rem;
+    color: #94a3b8;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.stat-value {
+    font-size: 0.85rem;
+    font-weight: bold;
+}
 
 /* Chart */
-#chart-container { 
-    background: var(--card); 
-    border-radius: 12px; 
-    height: 200px; 
-    padding: 10px; 
-    margin-bottom: 15px; 
-    border: 1px solid var(--border); 
+#chart-container {
+    background: var(--card);
+    border-radius: 12px;
+    height: 200px;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid var(--border);
 }
 
-.status-banner { 
-    font-size: 0.85rem; 
-    text-align: center; 
-    font-weight: bold;  
-    margin-bottom: 10px; 
+.status-banner {
+    font-size: 0.85rem;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 10px;
 }
 
 /* Controls */
-.input-undo-row { 
-    display: flex; 
-    gap: 10px; 
-    margin-bottom: 10px; 
+.input-undo-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
     justify-content: space-evenly;
 }
-.btn-undo { 
-    background: #475569; 
-    color: white; 
-    width: 50px; 
-    flex-shrink: 0; 
-    font-size: 1.2rem; 
+
+.btn-undo {
+    background: #475569;
+    color: white;
+    width: 50px;
+    flex-shrink: 0;
+    font-size: 1.2rem;
 }
 
-input { 
-    background: var(--card); 
-    border: 1px solid var(--border); 
-    color: white; 
-    padding: 12px; 
-    border-radius: 8px; 
-    flex-grow: 1; 
-    font-size: 1rem; 
+input {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    flex-grow: 1;
+    font-size: 1rem;
 }
 
-.btn-row { 
-    display: grid; 
-    grid-template-columns: 1fr 1fr; 
+.btn-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 10px;
 }
-button { 
-    border: none; 
-    border-radius: 8px; 
-    padding: 15px; 
-    font-weight: bold; 
-    cursor: pointer; 
-}
-.btn-win { background: var(--success); color: white; }
-.btn-loss { background: var(--danger); color: white; }
-.btn-new-day { background: var(--primary); color: white; width: 100%; margin-top: 10px; }
-button:disabled { opacity: 0.3 !important; cursor: not-allowed; }
 
-/* Tabs & Tables */
-.tabs { 
-    display: flex; 
-    border-bottom: 1px solid var(--border); 
-    margin-top: 25px; 
-}
-.tab { 
-    flex: 1; 
-    padding: 12px; 
-    text-align: center; 
-    font-size: 0.85rem; 
-    color: #64748b; 
+button {
+    border: none;
+    border-radius: 8px;
+    padding: 15px;
+    font-weight: bold;
     cursor: pointer;
 }
-.tab.active { 
-    color: var(--primary); 
-    border-bottom: 2px solid var(--primary); 
-    font-weight: bold; 
+
+.btn-win {
+    background: var(--success);
+    color: white;
 }
 
-.content-area { 
-    margin-top: 10px; 
-    padding-bottom: 50px; /* Extra space to ensure bottom of history is scrollable */
+.btn-loss {
+    background: var(--danger);
+    color: white;
 }
-table { 
-    width: 100%; 
-    border-collapse: collapse; 
-    font-size: 0.8rem; 
+
+.btn-new-day {
+    background: var(--primary);
+    color: white;
+    width: 100%;
+    margin-top: 10px;
 }
-th, td { 
-    padding: 12px 8px; 
-    border-bottom: 1px solid var(--border); 
-    text-align: left; 
+
+button:disabled {
+    opacity: 0.3 !important;
+    cursor: not-allowed;
 }
-.history-header { 
-    background: #1e293b; 
-    color: var(--primary); 
-    font-weight: bold; 
-    font-size: 0.75rem; 
+
+/* Tabs & Tables */
+.tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    margin-top: 25px;
+}
+
+.tab {
+    flex: 1;
+    padding: 12px;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #64748b;
+    cursor: pointer;
+}
+
+.tab.active {
+    color: var(--primary);
+    border-bottom: 2px solid var(--primary);
+    font-weight: bold;
+}
+
+.content-area {
+    margin-top: 10px;
+    padding-bottom: 50px;
+    /* Extra space to ensure bottom of history is scrollable */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+}
+
+th,
+td {
+    padding: 12px 8px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+}
+
+/* Aesthetic Header for History Groupings */
+tr.history-header {
+    background-color: transparent !important;
+    /* Removes default row background */
+}
+
+/* Container for the accordion rows in the History Tab */
+.history-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 12px;
+    overflow: hidden;
+}
+
+/* Header style - Exact match to your Growth page */
+.history-day-header {
+    padding: 12px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    background: #1e293b;
+    /* The specific dark blue/grey */
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #f8fafc;
+}
+
+.history-day-header:hover {
+    background: #243147;
+}
+
+/* The content area inside the toggle */
+.history-day-content {
+    display: none;
+    /* Closed by default */
+    padding: 5px 10px;
+    border-top: 1px solid var(--border);
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.history-day-content.active {
+    display: block;
+    /* Open when active */
+}
+
+/* Ensure the table inside the toggle looks clean */
+.history-day-content table {
+    margin-top: 5px;
+    border-bottom: none;
+}
+
+/* --- ASYMMETRIC TABLE ALIGNMENT --- */
+
+/* 1. Set all columns to center by default (handles middle columns) */
+table th,
+table td {
+    text-align: center;
+    padding: 12px 10px;
+}
+
+/* 2. Force the first column to align left */
+table th:first-child,
+table td:first-child {
+    text-align: left;
+    padding-left: 15px;
+    /* Extra breathing room on the left */
+}
+
+/* 3. Force the last column to align right */
+table th:last-child,
+table td:last-child {
+    text-align: right;
+    padding-right: 15px;
+    /* Extra breathing room on the right */
+}
+
+/* 4. Ensure headers match the data alignment */
+thead th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #94a3b8;
+    letter-spacing: 0.05em;
 }
 
 /* Settings Page */
-.page { display: none; }
-.page.active { display: block; }
-.settings-grid { 
-    display: grid; 
-    grid-template-columns: 1fr 1fr; 
-    gap: 12px; 
-    margin-top: 20px; 
-}
-@media (max-width: 450px) { 
-    .settings-grid { grid-template-columns: 1fr; } 
-}
-.setting-item { 
-    background: var(--card); 
-    padding: 12px; 
-    border-radius: 10px; 
-    border: 1px solid var(--border); 
-}
-.setting-item label { 
-    font-size: 0.75rem; 
-    color: #94a3b8; 
-    margin-bottom: 5px; 
-    display: block; 
-}
-.setting-feedback { font-size: 0.65rem; min-height: 1em; margin-top: 4px; }
-.feedback-info { color: var(--primary); }
-.feedback-warn { color: #f59e0b; }
-.feedback-error { color: var(--danger); }
-.btn-reset { 
-    background: var(--danger); 
-    color: white; 
-    width: 100%; 
-    margin-top: 30px; 
-
+.page {
+    display: none;
 }
 
+.page.active {
+    display: block;
+}
+
+.settings-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+@media (max-width: 450px) {
+    .settings-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.setting-item {
+    background: var(--card);
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+}
+
+.setting-item label {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.setting-feedback {
+    font-size: 0.65rem;
+    min-height: 1em;
+    margin-top: 4px;
+}
+
+.feedback-info {
+    color: var(--primary);
+}
+
+.feedback-warn {
+    color: #f59e0b;
+}
+
+.feedback-error {
+    color: var(--danger);
+}
+
+.btn-reset {
+    background: var(--danger);
+    color: white;
+    width: 100%;
+    margin-top: 30px;
+
+}
+
+.chart-box {
+    background: var(--card);
+    border-radius: 12px;
+    height: 250px;
+    padding: 15px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    border: 1px solid var(--border);
+}
+
+.section-title {
+    font-size: 0.9rem;
+    color: #94a3b8;
+    margin: 10px;
+    padding-left: 5px;
+}
+
+/* Accordion Styles */
+.day-row {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    overflow: hidden;
+}
+
+.day-header {
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.day-header:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.day-details {
+    display: none;
+    /* Hidden by default */
+    padding: 10px;
+    border-top: 1px solid var(--border);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.day-details.active {
+    display: block;
+}
+
+.mini-chart-box {
+    height: 150px;
+    margin-bottom: 10px;
+}
 
 
 
+/* Stats Summary */
+.stats-summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
 
+.summary-card {
+    background: var(--card);
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid var(--border);
+}
 
+.win-rate-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/* Force the text to the exact center of the ring */
+.center-percentage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #22c55e; /* Match the green ring color */
+}
+#winRateChart {
+    max-width: 100px;
+    max-height: 100px;
+}
+
+.summary-grid-small {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.small-card {
+    background: var(--card);
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    text-align: center;
+}
+.small-card .label {
+    font-size: 0.75rem;
+    color: #94a3b8; /* Dimmed gray for headings */
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px; /* Gap between heading and data */
+}
+.small-card .value {
+    font-size: 0.9rem;
+    font-weight: bold;
+    display: block;
+    padding: 6px;
+}
+
+/* Calendar */
+.calendar-section {
+    background: var(--card);
+    padding: 15px;
+    border-radius: 12px;
+    margin-top: 20px;
+    border: 1px solid var(--border);
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.cal-nav button {
+    padding: 5px 10px;
+    background: #334155;
+}
+
+.calendar-grid-header,
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    text-align: center;
+}
+
+.calendar-grid-header span {
+    font-size: 0.7rem;
+    color: #94a3b8;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+#growth-chart-container {
+    height: 300px; /* Increased height for better trade visibility */
+    padding: 20px;
+    background: #111827;
+    border-radius: 16px;
+    border: 1px solid #1f2937;
+}
+.cal-day {
+    aspect-ratio: 1/1;
+    background: #0f172a;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+.cal-day:hover {
+    border-color: var(--primary);
+}
+
+.cal-day.profit {
+    background: #064e3b;
+    color: #34d399;
+}
+
+.cal-day.loss {
+    background: #450a0a;
+    color: #f87171;
+}
+
+.cal-day.empty {
+    opacity: 0.3;
+    cursor: default;
+}
+
+.cal-day b {
+    font-size: 0.6rem;
+    display: block;
+    margin-top: 2px;
+}
+
+/* Day Detail */
+.detail-summary-row {
+    display: flex;
+    justify-content: space-between;
+    background: var(--card);
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+}
+
+.detail-stat {
+    text-align: center;
+}
+
+.detail-stat span {
+    font-size: 0.7rem;
+    color: #94a3b8;
+    display: block;
+}
+
+.mini-detail {
+    height: 150px;
+    margin-bottom: 20px;
+}

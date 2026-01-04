@@ -118,22 +118,59 @@ function startNewDay() {
 // --- UI ---
 function updateUI() {
     recalculateState();
+    
     const drUsd = settings.balance * (settings.dailyRiskPct / 100);
     const dtUsd = settings.balance * (settings.dailyTgtPct / 100);
+    const poolRemaining = drUsd + currentPnL;
     
-    document.getElementById('stat-bal').innerText = `$${Math.round(settings.balance + currentPnL)}`;
-    document.getElementById('stat-tgt').innerText = `$${Math.round(dtUsd)}`;
-    document.getElementById('stat-stop').innerText = `-$${Math.round(drUsd)}`;
-    document.getElementById('stat-risk').innerText = `$${currentRisk.toFixed(2)}`;
-    document.getElementById('stat-pnl').innerText = `$${currentPnL.toFixed(1)}`;
-    document.getElementById('stat-pool').innerText = `$${Math.max(0, drUsd + currentPnL).toFixed(1)}`;
+    // 1. Logic for Limits
+    const targetHit = currentPnL >= dtUsd;
+    const lossLimitHit = currentRisk < 1.0 || poolRemaining <= 1.0;
 
-    const bn = document.getElementById('status-note');
-    if (currentPnL >= dtUsd) { bn.innerText = "🏆 TARGET REACHED!"; bn.style.color = "var(--success)"; }
-    else if (currentRisk < 1.0 || (drUsd + currentPnL) <= 1.0) { bn.innerText = "🛑 LOSS LIMIT HIT!"; bn.style.color = "var(--danger)"; }
-    else bn.innerText = "";
+    // 2. Update Stats (Safe check)
+    try {
+        document.getElementById('stat-bal').innerText = `$${Math.round(settings.balance + currentPnL)}`;
+        document.getElementById('stat-tgt').innerText = `$${Math.round(dtUsd)}`;
+        document.getElementById('stat-stop').innerText = `-$${Math.round(drUsd)}`;
+        document.getElementById('stat-risk').innerText = `$${currentRisk.toFixed(2)}`;
+        document.getElementById('stat-pnl').innerText = `$${currentPnL.toFixed(1)}`;
+        document.getElementById('stat-pool').innerText = `$${Math.max(0, poolRemaining).toFixed(1)}`;
 
-    document.getElementById('new-day-btn').disabled = session.trades.length === 0;
+        const bn = document.getElementById('status-note');
+        if (bn) {
+            if (targetHit) { 
+                // Displays Actual Gain vs Set Goal
+                const gainPct = ((currentPnL / dtUsd) * 100).toFixed(0);
+                bn.innerText = `🏆 TARGET REACHED: ${gainPct}% ($${currentPnL.toFixed(0)} / $${dtUsd.toFixed(0)})`; 
+                bn.style.color = "var(--success)"; 
+            } else if (lossLimitHit) { 
+                // Displays Actual Loss vs Daily Stop
+                const lossValue = Math.abs(currentPnL).toFixed(0);
+                bn.innerText = `🛑 LOSS LIMIT HIT: ($${lossValue} / $${drUsd.toFixed(0)})`; 
+                bn.style.color = "var(--danger)"; 
+            } else { 
+                // Standard Progress Text
+                const progressPct = ((currentPnL / settings.balance) * 100).toFixed(1);
+                const prefix = currentPnL >= 0 ? "Up" : "Down";
+                const color = currentPnL >= 0 ? "var(--success)" : "var(--danger)";
+                
+                bn.innerText = `${prefix} by ${Math.abs(progressPct)}% ($${currentPnL.toFixed(1)})`;
+                bn.style.color = color;
+                bn.style.opacity = "0.8";
+            }
+        }
+    } catch (e) { console.warn("Stats UI missing elements:", e); }
+
+    // 3. THE DISABLED STATE LOGIC
+    const winBtn = document.getElementById('btn-win');
+    const lossBtn = document.getElementById('btn-loss');
+    const newDayBtn = document.getElementById('new-day-btn');
+
+    if (winBtn) winBtn.disabled = (targetHit || lossLimitHit);
+    if (lossBtn) lossBtn.disabled = lossLimitHit;
+    if (newDayBtn) newDayBtn.disabled = session.trades.length === 0;
+
+    // 4. FINAL VISUALS
     updateChart(dtUsd, drUsd);
     switchTab(currentTab);
 }
@@ -194,4 +231,5 @@ function saveSettings() {
 }
 function saveAndRefresh() { localStorage.setItem('cap_session', JSON.stringify(session)); localStorage.setItem('cap_history', JSON.stringify(historyLog)); updateUI(); }
 function resetApp() { if(confirm("Clear ALL data?")) { localStorage.clear(); location.reload(); } }
+
 init();

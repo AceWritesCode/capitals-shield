@@ -254,11 +254,13 @@ function updateUI() {
             if (session.isLocked) {
                 updateCountdownDisplay(bn);
             } else if (targetHit) {
-                bn.innerText = "🎉 Target Reached!";
+                const gainPct = ((currentPnL / dtUsd) * 100).toFixed(0);
+                bn.innerText = `🏆 TARGET REACHED: ${gainPct}% ($${currentPnL.toFixed(0)} / $${dtUsd.toFixed(0)})`;
                 bn.style.color = "var(--success)";
                 bn.style.opacity = "1";
             } else if (lossLimitHit) {
-                bn.innerText = "🛡️ Daily Stop Reached!";
+                const lossValue = Math.abs(currentPnL).toFixed(0);
+                bn.innerText = `🛑 LOSS LIMIT HIT: ($${lossValue} / $${drUsd.toFixed(0)})`;
                 bn.style.color = "var(--danger)";
                 bn.style.opacity = "1";
             } else if (currentRisk < 0.01 && currentStage === 0) {

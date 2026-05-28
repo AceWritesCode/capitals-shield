@@ -1,10 +1,32 @@
-let settings = JSON.parse(localStorage.getItem('cap_settings')) || {
-    balance: 7000, dailyRiskPct: 0.5, dailyTgtPct: 2.0, compoundPct: 33, rr: 5.0, autoLock: true
-};
-if (settings.autoLock === undefined) settings.autoLock = true;
+let accounts = JSON.parse(localStorage.getItem('cap_accounts')) || {};
+let activeAccountId = localStorage.getItem('cap_active_account') || 'acct_1';
 
-let session = JSON.parse(localStorage.getItem('cap_session')) || { trades: [] };
-let historyLog = JSON.parse(localStorage.getItem('cap_history')) || [];
+if (Object.keys(accounts).length === 0) {
+    if (localStorage.getItem('cap_settings')) {
+        accounts['acct_1'] = {
+            id: 'acct_1',
+            name: 'Account 1',
+            settings: JSON.parse(localStorage.getItem('cap_settings')),
+            session: JSON.parse(localStorage.getItem('cap_session')) || { trades: [] },
+            historyLog: JSON.parse(localStorage.getItem('cap_history')) || []
+        };
+    } else {
+        accounts['acct_1'] = {
+            id: 'acct_1',
+            name: 'Account 1',
+            settings: { balance: 7000, dailyRiskPct: 0.5, dailyTgtPct: 2.0, compoundPct: 33, rr: 5.0, autoLock: true },
+            session: { trades: [] },
+            historyLog: []
+        };
+    }
+    localStorage.setItem('cap_accounts', JSON.stringify(accounts));
+    localStorage.setItem('cap_active_account', 'acct_1');
+}
+
+let settings = accounts[activeAccountId].settings;
+if (settings.autoLock === undefined) settings.autoLock = true;
+let session = accounts[activeAccountId].session;
+let historyLog = accounts[activeAccountId].historyLog;
 
 let currentRisk = 0, currentStage = 0, currentPnL = 0, chart, currentTab = 'hist', settingsValid = true;
 let openHistoryIds = new Set(['current']);
@@ -37,6 +59,7 @@ function getFormattedTime() {
 
 // --- INITIALIZATION ---
 function init() {
+    populateSettingsAccountDropdown();
     loadSettingsToUI();
     attachListeners(); // Updated: Binds all button clicks
     recalculateState();
@@ -67,6 +90,12 @@ function attachListeners() {
     document.getElementById('go-to-help').addEventListener('click', () => togglePage('help-page'));
     document.getElementById('btn-settings-done').addEventListener('click', tryCloseSettings);
     document.getElementById('btn-help-back').addEventListener('click', () => togglePage('main-page'));
+
+    // Account Switcher Navigation
+    document.getElementById('btn-prev-acct').addEventListener('click', prevAccount);
+    document.getElementById('btn-next-acct').addEventListener('click', nextAccount);
+    document.getElementById('btn-add-account').addEventListener('click', createNewAccount);
+    document.getElementById('settings-account-select').addEventListener('change', (e) => switchAccount(e.target.value));
 
     // Tabs
     document.getElementById('tab-hist').addEventListener('click', () => switchTab('hist'));
@@ -184,6 +213,9 @@ function updateUI() {
 
     // 2. Update Stats
     try {
+        const nameEl = document.getElementById('current-account-name');
+        if (nameEl) nameEl.textContent = accounts[activeAccountId].name;
+        
         document.getElementById('stat-bal').innerText = `$${Math.round(settings.balance + currentPnL)}`;
         document.getElementById('stat-tgt').innerText = `$${Math.round(dtUsd)}`;
         document.getElementById('stat-stop').innerText = `-$${Math.round(drUsd)}`;
@@ -425,10 +457,90 @@ function togglePage(p) { if(p === 'main-page') saveSettings(); document.querySel
 function tryCloseSettings() { if (settingsValid) togglePage('main-page'); }
 function saveSettings() { 
     settings = { balance: parseFloat(document.getElementById('set-balance').value), dailyRiskPct: parseFloat(document.getElementById('set-daily-risk').value), dailyTgtPct: parseFloat(document.getElementById('set-daily-target').value), compoundPct: parseFloat(document.getElementById('set-compound').value), rr: parseFloat(document.getElementById('set-rr').value), autoLock: document.getElementById('set-auto-lock').checked };
-    localStorage.setItem('cap_settings', JSON.stringify(settings)); saveAndRefresh(); 
+    accounts[activeAccountId].settings = settings;
+    saveAndRefresh(); 
 }
-function saveAndRefresh() { localStorage.setItem('cap_session', JSON.stringify(session)); localStorage.setItem('cap_history', JSON.stringify(historyLog)); updateUI(); }
-function resetApp() { if(confirm("Clear ALL data?")) { localStorage.clear(); location.reload(); } }
+function saveAndRefresh() { 
+    accounts[activeAccountId].session = session;
+    accounts[activeAccountId].historyLog = historyLog;
+    localStorage.setItem('cap_accounts', JSON.stringify(accounts));
+    updateUI(); 
+}
+function resetApp() { 
+    if(confirm("Clear data for the current account?")) { 
+        session = { trades: [] };
+        historyLog = [];
+        saveAndRefresh();
+        location.reload(); 
+    } 
+}
+
+// --- ACCOUNT MANAGEMENT ---
+function getSortedAccounts() {
+    return Object.values(accounts).sort((a,b) => a.id.localeCompare(b.id));
+}
+
+function switchAccount(id) {
+    if (!accounts[id]) return;
+    activeAccountId = id;
+    localStorage.setItem('cap_active_account', id);
+    
+    settings = accounts[id].settings;
+    if (settings.autoLock === undefined) settings.autoLock = true;
+    session = accounts[id].session;
+    historyLog = accounts[id].historyLog;
+    
+    currentRisk = 0; currentStage = 0; currentPnL = 0;
+    openHistoryIds = new Set(['current']);
+    undoneSessionTrades = [];
+    
+    loadSettingsToUI();
+    recalculateState();
+    updateUI();
+}
+
+function nextAccount() {
+    const list = getSortedAccounts();
+    const idx = list.findIndex(a => a.id === activeAccountId);
+    if (idx < list.length - 1) switchAccount(list[idx + 1].id);
+    else switchAccount(list[0].id);
+}
+
+function prevAccount() {
+    const list = getSortedAccounts();
+    const idx = list.findIndex(a => a.id === activeAccountId);
+    if (idx > 0) switchAccount(list[idx - 1].id);
+    else switchAccount(list[list.length - 1].id);
+}
+
+function createNewAccount() {
+    const name = prompt("Enter new account name:");
+    if (!name || name.trim() === '') return;
+    const id = 'acct_' + Date.now();
+    accounts[id] = {
+        id: id,
+        name: name.trim(),
+        settings: { balance: 7000, dailyRiskPct: 0.5, dailyTgtPct: 2.0, compoundPct: 33, rr: 5.0, autoLock: true },
+        session: { trades: [] },
+        historyLog: []
+    };
+    localStorage.setItem('cap_accounts', JSON.stringify(accounts));
+    switchAccount(id);
+    populateSettingsAccountDropdown();
+}
+
+function populateSettingsAccountDropdown() {
+    const select = document.getElementById('settings-account-select');
+    if (!select) return;
+    select.innerHTML = '';
+    getSortedAccounts().forEach(acc => {
+        const opt = document.createElement('option');
+        opt.value = acc.id;
+        opt.textContent = acc.name;
+        if (acc.id === activeAccountId) opt.selected = true;
+        select.appendChild(opt);
+    });
+}
 
 // --- ACCOUNT ANALYTICS ---
 function renderGrowthPage() {

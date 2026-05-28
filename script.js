@@ -801,7 +801,8 @@ function renderCalendar() {
     }
 
     for (let i = 1; i <= daysInMonth; i++) {
-        const d = document.createElement('div'); d.className = 'cal-day'; d.innerHTML = `<span>${i}</span>`;
+        const d = document.createElement('div'); d.className = 'cal-day'; 
+        d.innerHTML = `<span class="cal-date">${i}</span>`;
         const dateStr = `${i} ${viewDate.toLocaleString('default', { month: 'short' })} ${year}`;
         let dayData = historyLog.find(h => h.date === dateStr);
         
@@ -817,7 +818,10 @@ function renderCalendar() {
         if (dayData) {
             const pnl = dayData.endBal - dayData.startBal;
             d.classList.add(pnl >= 0 ? 'profit' : 'loss');
-            d.innerHTML += `<b>${pnl >= 0 ? '+' : ''}${Math.round(pnl)}</b>`;
+            let absPnl = Math.abs(pnl);
+            let pnlStr = absPnl >= 1000 ? (absPnl / 1000).toFixed(2) + 'K' : (absPnl % 1 !== 0 ? absPnl.toFixed(1) : absPnl);
+            let sign = pnl >= 0 ? '+' : '-';
+            d.innerHTML += `<div class="cal-pnl">${sign}$${pnlStr}</div>`;
             d.onclick = () => openDayDetail(dayData);
         }
         grid.appendChild(d);

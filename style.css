@@ -795,41 +795,57 @@ tbody tr:last-child td {
     border: 1px solid #1f2937;
 }
 .cal-day {
-    aspect-ratio: 1/1;
+    min-height: 80px;
     background: #0f172a;
     border-radius: 8px;
-    font-size: 0.75rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     border: 1px solid transparent;
+    position: relative;
+    padding: 8px;
 }
 
 .cal-day:hover {
     border-color: var(--primary);
 }
 
+.cal-date {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    font-size: 0.75rem;
+    color: #94a3b8;
+    font-weight: bold;
+}
+
+.cal-pnl {
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
 .cal-day.profit {
-    background: #064e3b;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+.cal-day.profit .cal-pnl, .cal-day.profit .cal-date {
     color: #34d399;
 }
 
 .cal-day.loss {
-    background: #450a0a;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+.cal-day.loss .cal-pnl, .cal-day.loss .cal-date {
     color: #f87171;
 }
 
 .cal-day.empty {
     opacity: 0.3;
     cursor: default;
-}
-
-.cal-day b {
-    font-size: 0.6rem;
-    display: block;
-    margin-top: 2px;
 }
 
 /* Day Detail */

@@ -39,11 +39,11 @@
             <div class="controls">
                 <div class="pos-calculator">
                     <div class="calc-row">
-                        <div class="calc-result" style="align-items: flex-start; text-align: left;">
+                        <div class="calc-result" style="align-items: flex-start; text-align: left; width: 100%;">
                             <span class="calc-label">Stop Loss (<span id="sl-unit-label">Pips</span>):</span>
-                            <div style="display:flex; gap:8px; align-items:center;">
-                                <div class="custom-stepper">
-                                    <input type="number" id="calc-sl" placeholder="0.0" class="stepper-input" step="any" min="0">
+                            <div style="display:flex; gap:8px; align-items:center; width: 100%;">
+                                <div class="custom-stepper" style="flex: 1;">
+                                    <input type="number" id="calc-sl" placeholder="0.0" class="stepper-input" step="any" min="0" style="width: 100%;">
                                     <div class="stepper-controls">
                                         <button id="sl-inc" class="stepper-btn stepper-up">
                                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg>
@@ -53,7 +53,7 @@
                                         </button>
                                     </div>
                                 </div>
-                                <button id="calc-unit-toggle" class="calc-unit-btn-small">Toggle</button>
+                                <button id="calc-unit-toggle" class="calc-unit-btn-small">Pips</button>
                             </div>
                         </div>
                         <div class="calc-result" style="align-items: flex-start; text-align: left;">

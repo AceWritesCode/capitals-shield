@@ -333,11 +333,16 @@ function switchTab(t) {
         const sessionPnL = session.trades.reduce((s, tr) => s + tr.pnl, 0);
         const isCurrentActive = openHistoryIds.has('current') ? 'active' : '';
 
+        const startBal = settings.balance;
+        const endBal = startBal + sessionPnL;
+        const sessionPct = startBal > 0 ? ((sessionPnL / startBal) * 100).toFixed(1) : 0;
         const sessionHtml = `
         <div class="history-item">
             <div class="history-day-header" onclick="toggleHistoryDay('current')">
                 <span>Today</span>
-                <span style="color: ${sessionPnL >= 0 ? 'var(--success)' : 'var(--danger)'}">$${sessionPnL.toFixed(2)}</span>
+                <span style="color: ${sessionPnL >= 0 ? 'var(--success)' : 'var(--danger)'}; font-size: 0.9em;">
+                    $${sessionPnL >= 0 ? '+' : ''}${sessionPnL.toFixed(1)} | $${Math.round(startBal)} ➔ $${Math.round(endBal)} | ${sessionPnL >= 0 ? '+' : ''}${sessionPct}%
+                </span>
             </div>
             <div id="hist-current" class="history-day-content ${isCurrentActive}">
                 <table>
@@ -352,12 +357,15 @@ function switchTab(t) {
 
         historyLog.forEach((day, index) => {
             const netPnL = day.endBal - day.startBal;
+            const dayPct = day.startBal > 0 ? ((netPnL / day.startBal) * 100).toFixed(1) : 0;
             const isActive = openHistoryIds.has(index) ? 'active' : '';
             const dayHtml = `
             <div class="history-item">
                 <div class="history-day-header" onclick="toggleHistoryDay(${index})">
                     <span>${day.date}</span>
-                    <span style="color: ${netPnL >= 0 ? 'var(--success)' : 'var(--danger)'}">$${netPnL.toFixed(2)}</span>
+                    <span style="color: ${netPnL >= 0 ? 'var(--success)' : 'var(--danger)'}; font-size: 0.9em;">
+                        $${netPnL >= 0 ? '+' : ''}${netPnL.toFixed(1)} | $${Math.round(day.startBal)} ➔ $${Math.round(day.endBal)} | ${netPnL >= 0 ? '+' : ''}${dayPct}%
+                    </span>
                 </div>
                 <div id="hist-${index}" class="history-day-content ${isActive}">
                     <table>

@@ -218,12 +218,11 @@
 
                 <h3 style="color: var(--primary); margin-top: 25px;">Example Scenario</h3>
                 <div style="background: #0f172a; padding: 15px; border-radius: 8px; border: 1px dashed var(--border); font-size: 0.85rem; line-height: 1.6;">
-                    <p style="margin-top: 0;"><b>Settings:</b> $10,000 Bal | 1% Daily Risk ($100) | R:R Goal 2.0 | 50% Compound</p>
-                    <p><b>Trade 1:</b> The app gives you $50 risk (half of your $100 limit, so you have 2 tries).</p>
-                    <p><i>If you win:</i> You make $100. The app takes 50% of that profit ($50) and adds it to your baseline risk. Your Next Risk is now <b>$100</b> ($50 base + $50 house money).</p>
-                    <p><b>Trade 2:</b> You risk $100.</p>
-                    <p><i>If you win again:</i> You make $200! You're up $300 total, risking <i>zero</i> extra dollars of your own base capital.</p>
-                    <p><i>If you lose Trade 2:</i> You only lose the $100. Because half of it was "house money", you simply fall back to breakeven for the day! You are completely shielded.</p>
+                    <p style="margin-top: 0;"><b>Settings:</b> $10,000 Bal | 2% Daily Risk ($200) | 4% Daily Target ($400) | 33% Compound Risk | R:R Goal 2.0</p>
+                    <p><b>The Setup:</b> You've set aside a hard line of $200 as your maximum loss for the day. If you strictly follow the app's sizing, it is mathematically impossible to lose more than this amount.</p>
+                    <p><b>Winning Trades:</b> With compound risk at 33%, your first risk will be roughly 33% of your $200 limit (about $66). If you win at a 2.0 RR, your balance increases, and the app automatically scales up your next risk based on that new balance. By compounding wins, you can hit your $400 daily target incredibly fast—often in just 2 or 3 trades!</p>
+                    <p><b>Losing Trades:</b> When you lose, your remaining risk pool decreases. Because the app calculates your next position size based on this shrinking pool, your risk gets smaller with every loss. This extends your survivability drastically, allowing you to endure 5 to 6 consecutive losses before hitting your daily stop.</p>
+                    <p style="margin-bottom: 0; font-style: italic; color: var(--success);"><b>The Golden Rule:</b> Win big on streaks, survive longer on drawdowns, and never lose more than your set daily limit.</p>
                 </div>
             </div>
         </div>

@@ -245,11 +245,24 @@ body {
 }
 
 .btn-undo {
-    background: #475569;
-    color: white;
-    width: 50px;
+    background: transparent;
+    color: var(--text);
+    height: 38px;
+    width: 38px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
     flex-shrink: 0;
     font-size: 1.2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-undo:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--primary);
+    color: var(--primary);
 }
 
 .icon-btn {

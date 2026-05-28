@@ -392,6 +392,18 @@ table {
     border: none;
 }
 
+.detail-table {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+}
+
+.detail-table tr:last-child td {
+    border-bottom: none;
+}
+
 th {
     padding: 14px 12px;
     text-align: center;

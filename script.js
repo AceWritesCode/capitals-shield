@@ -225,7 +225,7 @@ function updateUI() {
         document.getElementById('stat-tgt').innerText = `$${Math.round(dtUsd)}`;
         document.getElementById('stat-stop').innerText = `-$${Math.round(drUsd)}`;
         document.getElementById('stat-risk').innerText = `$${currentRisk.toFixed(2)}`;
-        document.getElementById('stat-pnl').innerText = `$${currentPnL.toFixed(1)}`;
+        document.getElementById('stat-pnl').innerText = `$${(currentRisk * settings.rr).toFixed(2)}`;
         document.getElementById('stat-pool').innerText = `$${Math.max(0, poolRemaining).toFixed(1)}`;
 
         const bn = document.getElementById('status-note');
@@ -336,7 +336,7 @@ function switchTab(t) {
         const sessionHtml = `
         <div class="history-item">
             <div class="history-day-header" onclick="toggleHistoryDay('current')">
-                <span>Current Session</span>
+                <span>Today</span>
                 <span style="color: ${sessionPnL >= 0 ? 'var(--success)' : 'var(--danger)'}">$${sessionPnL.toFixed(2)}</span>
             </div>
             <div id="hist-current" class="history-day-content ${isCurrentActive}">

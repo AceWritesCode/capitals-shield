@@ -331,7 +331,10 @@ button:disabled {
 
 .tabs {
     display: flex;
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
+    background: #1e293b;
     margin-bottom: 15px;
 }
 
@@ -354,7 +357,7 @@ button:disabled {
     color: var(--primary);
     font-weight: bold;
     border-bottom: 2px solid var(--primary);
-    background: rgba(59, 130, 246, 0.05);
+    background: var(--bg);
 }
 
 .content-area {

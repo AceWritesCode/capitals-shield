@@ -39,10 +39,17 @@
             <div class="controls">
                 <div class="pos-calculator">
                     <div class="calc-row">
-                        <input type="number" id="calc-sl" placeholder="SL in pips - XAUUSD" class="calc-input" step="any" min="0">
+                        <div class="sl-input-group">
+                            <input type="number" id="calc-sl" placeholder="SL in Pips" class="calc-input" step="any" min="0">
+                            <button id="calc-unit-toggle" class="calc-unit-btn">Pips</button>
+                        </div>
                         <div class="calc-result">
                             <span class="calc-label">Lots:</span>
-                            <span id="calc-lots" class="calc-value">0.00</span>
+                            <div class="lots-control">
+                                <button id="lots-dec" class="lots-btn">-</button>
+                                <span id="calc-lots" class="calc-value">0.00</span>
+                                <button id="lots-inc" class="lots-btn">+</button>
+                            </div>
                         </div>
                         <div class="calc-result">
                             <span class="calc-label">Actual Risk:</span>

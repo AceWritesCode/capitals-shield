@@ -25,6 +25,7 @@ if (Object.keys(accounts).length === 0) {
 
 let settings = accounts[activeAccountId].settings;
 if (settings.autoLock === undefined) settings.autoLock = true;
+let slMode = 'pips'; // 'pips' or 'points'
 let session = accounts[activeAccountId].session;
 let historyLog = accounts[activeAccountId].historyLog;
 
@@ -135,29 +136,74 @@ function attachListeners() {
 
     // Calculator Listener
     const calcSlEl = document.getElementById('calc-sl');
-    if (calcSlEl) calcSlEl.addEventListener('input', updatePosCalculator);
+    if (calcSlEl) calcSlEl.addEventListener('input', () => updatePosCalculator('sl'));
+    
+    const calcUnitToggle = document.getElementById('calc-unit-toggle');
+    if (calcUnitToggle) calcUnitToggle.addEventListener('click', toggleSlUnit);
+    
+    const lotsInc = document.getElementById('lots-inc');
+    if (lotsInc) lotsInc.addEventListener('click', () => updatePosCalculator('lots-inc'));
+    
+    const lotsDec = document.getElementById('lots-dec');
+    if (lotsDec) lotsDec.addEventListener('click', () => updatePosCalculator('lots-dec'));
 }
 
-function updatePosCalculator() {
+function toggleSlUnit() {
+    const btn = document.getElementById('calc-unit-toggle');
+    const input = document.getElementById('calc-sl');
+    if (!btn || !input) return;
+    
+    if (slMode === 'pips') {
+        slMode = 'points';
+        btn.innerText = 'Points';
+        input.placeholder = 'SL in Points';
+        if (input.value && !isNaN(input.value)) {
+            input.value = (parseFloat(input.value) * 10).toFixed(1);
+        }
+    } else {
+        slMode = 'pips';
+        btn.innerText = 'Pips';
+        input.placeholder = 'SL in Pips';
+        if (input.value && !isNaN(input.value)) {
+            input.value = (parseFloat(input.value) / 10).toFixed(1);
+        }
+    }
+    updatePosCalculator('sl');
+}
+
+function updatePosCalculator(source = 'sl') {
     const slInput = document.getElementById('calc-sl');
     const lotsEl = document.getElementById('calc-lots');
     const actualRiskEl = document.getElementById('calc-actual-risk');
     
     if (!slInput || !lotsEl || !actualRiskEl) return;
     
-    const slPips = parseFloat(slInput.value);
-    if (isNaN(slPips) || slPips <= 0) {
+    const slVal = parseFloat(slInput.value);
+    if (isNaN(slVal) || slVal <= 0) {
         lotsEl.innerText = "0.00";
         actualRiskEl.innerText = "$0.00";
         return;
     }
     
-    // XAUUSD calculation: 1 Lot = $10 per pip
-    const rawLots = currentRisk / (slPips * 10);
-    const roundedLots = Math.floor(rawLots * 100) / 100;
-    const actualRisk = roundedLots * slPips * 10;
+    const slPips = slMode === 'points' ? slVal / 10 : slVal;
+    let roundedLots;
     
-    lotsEl.innerText = roundedLots.toFixed(2);
+    if (source === 'sl' || source === 'update') {
+        const rawLots = currentRisk / (slPips * 10);
+        roundedLots = Math.floor(rawLots * 100) / 100;
+        lotsEl.innerText = roundedLots.toFixed(2);
+    } else {
+        roundedLots = parseFloat(lotsEl.innerText) || 0;
+        if (source === 'lots-inc') roundedLots += 0.01;
+        if (source === 'lots-dec') roundedLots -= 0.01;
+        if (roundedLots < 0) roundedLots = 0;
+        
+        // fix floating point precision
+        roundedLots = Math.round(roundedLots * 100) / 100;
+        lotsEl.innerText = roundedLots.toFixed(2);
+    }
+    
+    const actualRisk = roundedLots * slPips * 10;
     actualRiskEl.innerText = `$${actualRisk.toFixed(2)}`;
     
     if (actualRisk > currentRisk) {

@@ -119,25 +119,78 @@ body {
 .pos-calculator {
     background: rgba(30, 41, 59, 0.4);
     border: 1px solid var(--border);
-    border-radius: var(--radius);
+    border-radius: 20px; /* Rounder border */
     padding: 15px;
     margin-bottom: 15px;
 }
 .calc-row {
     display: grid;
-    grid-template-columns: 1fr auto auto;
+    grid-template-columns: 200px auto auto; /* Less wide input on web */
     gap: 20px;
     align-items: center;
+}
+.sl-input-group {
+    display: flex;
+    align-items: stretch;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.2s;
+}
+.sl-input-group:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 .calc-input {
     width: 100%;
     padding: 10px 15px;
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    background: var(--bg);
+    border: none;
+    background: transparent;
     color: var(--text);
     font-size: 0.95rem;
+    outline: none;
+}
+.calc-unit-btn {
+    background: rgba(0,0,0,0.1);
+    border: none;
+    border-left: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 0 12px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 700;
     transition: all 0.2s;
+}
+.calc-unit-btn:hover {
+    background: rgba(255,255,255,0.05);
+    color: var(--text);
+}
+.lots-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.lots-btn {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.1rem;
+    padding: 0;
+    line-height: 1;
+    transition: all 0.2s;
+}
+.lots-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
 }
 .calc-input:focus {
     border-color: var(--primary);

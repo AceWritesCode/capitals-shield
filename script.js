@@ -15,7 +15,7 @@ if (Object.keys(accounts).length === 0) {
             id: 'acct_1',
             name: 'Account 1',
             settings: { balance: 7000, dailyRiskPct: 0.5, dailyTgtPct: 2.0, compoundPct: 33, rr: 5.0, autoLock: true },
-            session: { trades: [] },
+            session: { trades: [], date: getFormattedDate(), isLocked: false },
             historyLog: []
         };
     }
@@ -27,6 +27,12 @@ let settings = accounts[activeAccountId].settings;
 if (settings.autoLock === undefined) settings.autoLock = true;
 let session = accounts[activeAccountId].session;
 let historyLog = accounts[activeAccountId].historyLog;
+
+Object.values(accounts).forEach(acc => {
+    if (!acc.session) acc.session = { trades: [], date: getFormattedDate(), isLocked: false };
+    if (!acc.session.date) acc.session.date = getFormattedDate();
+    if (acc.session.isLocked === undefined) acc.session.isLocked = false;
+});
 
 let currentRisk = 0, currentStage = 0, currentPnL = 0, chart, currentTab = 'hist', settingsValid = true;
 let openHistoryIds = new Set(['current']);
@@ -61,7 +67,8 @@ function getFormattedTime() {
 function init() {
     populateSettingsAccountDropdown();
     loadSettingsToUI();
-    attachListeners(); // Updated: Binds all button clicks
+    attachListeners();
+    checkMidnightRollover();
     recalculateState();
     updateUI();
 }
@@ -178,26 +185,41 @@ function redoTrade() {
     }
 }
 
-function startNewDay() {
-    const dayPnL = session.trades.reduce((s, t) => s + t.pnl, 0);
-    historyLog.unshift({ date: getFormattedDate(), startBal: settings.balance, endBal: settings.balance + dayPnL, trades: [...session.trades] });
-    settings.balance += dayPnL;
-    session = { trades: [] };
-    undoneSessionTrades = [];
-    localStorage.setItem('cap_settings', JSON.stringify(settings));
-    loadSettingsToUI();
+function toggleLockDay() {
+    session.isLocked = !session.isLocked;
     saveAndRefresh();
 }
 
-function resumeDay() {
-    if (historyLog.length > 0 && historyLog[0].date === getFormattedDate()) {
-        const lastDay = historyLog.shift(); // Remove from history
-        session.trades = [...lastDay.trades]; // Restore trades
-        settings.balance = lastDay.startBal; // Restore starting balance
+function checkMidnightRollover() {
+    const today = getFormattedDate();
+    let updated = false;
+    
+    Object.values(accounts).forEach(acc => {
+        if (acc.session.date && acc.session.date !== today) {
+            if (acc.session.trades && acc.session.trades.length > 0) {
+                const dayPnL = acc.session.trades.reduce((s, t) => s + t.pnl, 0);
+                acc.historyLog.unshift({ 
+                    date: acc.session.date, 
+                    startBal: acc.settings.balance, 
+                    endBal: acc.settings.balance + dayPnL, 
+                    trades: [...acc.session.trades] 
+                });
+                acc.settings.balance += dayPnL;
+            }
+            acc.session = { trades: [], date: today, isLocked: false };
+            updated = true;
+        }
+    });
+    
+    if (updated) {
+        localStorage.setItem('cap_accounts', JSON.stringify(accounts));
+        settings = accounts[activeAccountId].settings;
+        session = accounts[activeAccountId].session;
+        historyLog = accounts[activeAccountId].historyLog;
         undoneSessionTrades = [];
-        localStorage.setItem('cap_settings', JSON.stringify(settings));
         loadSettingsToUI();
-        saveAndRefresh();
+        recalculateState();
+        updateUI();
     }
 }
 
@@ -211,10 +233,9 @@ function updateUI() {
     // 1. Logic for Limits
     const targetHit = currentPnL >= dtUsd;
     const lossLimitHit = currentRisk < 1.0 || poolRemaining <= 1.0;
-
-    // Check if the last archived date matches today's date
-    const todayStr = getFormattedDate();
-    const isDayLocked = historyLog.length > 0 && historyLog[0].date === todayStr;
+    
+    const shouldLockTarget = settings.autoLock && targetHit;
+    const shouldLockLoss = settings.autoLock && lossLimitHit;
 
     // 2. Update Stats
     try {
@@ -230,48 +251,45 @@ function updateUI() {
 
         const bn = document.getElementById('status-note');
         if (bn) {
-            if (isDayLocked) {
-                // LOCKOUT STATE: Show Countdown
+            if (session.isLocked) {
                 updateCountdownDisplay(bn);
             } else if (targetHit) {
-                const gainPct = ((currentPnL / dtUsd) * 100).toFixed(0);
-                bn.innerText = `🏆 TARGET REACHED: ${gainPct}% ($${currentPnL.toFixed(0)} / $${dtUsd.toFixed(0)})`;
+                bn.innerText = "🎉 Target Reached!";
                 bn.style.color = "var(--success)";
+                bn.style.opacity = "1";
             } else if (lossLimitHit) {
-                const lossValue = Math.abs(currentPnL).toFixed(0);
-                bn.innerText = `🛑 LOSS LIMIT HIT: ($${lossValue} / $${drUsd.toFixed(0)})`;
+                bn.innerText = "🛡️ Daily Stop Reached!";
                 bn.style.color = "var(--danger)";
+                bn.style.opacity = "1";
+            } else if (currentRisk < 0.01 && currentStage === 0) {
+                bn.innerText = "Setup your settings to begin calculating risk.";
+                bn.style.color = "var(--text)";
+                bn.style.opacity = "0.7";
             } else {
-                const progressPct = ((currentPnL / settings.balance) * 100).toFixed(1);
-                const prefix = currentPnL >= 0 ? "Up" : "Down";
-                bn.innerText = `${prefix} by ${Math.abs(progressPct)}% ($${currentPnL.toFixed(1)})`;
-                bn.style.color = currentPnL >= 0 ? "var(--success)" : "var(--danger)";
-                bn.style.opacity = "0.8";
+                bn.innerText = "All systems operational.";
+                bn.style.color = "var(--text)";
+                bn.style.opacity = "0.7";
             }
         }
-    } catch (e) { console.warn("UI Update Error:", e); }
+    } catch(e) {}
 
     // 3. DISABLE BUTTONS IF LOCKED
     const winBtn = document.getElementById('btn-win');
     const lossBtn = document.getElementById('btn-loss');
-    
-    const shouldLockTarget = settings.autoLock && targetHit;
-    const shouldLockLoss = settings.autoLock && lossLimitHit;
-
-    if (winBtn) winBtn.disabled = (shouldLockTarget || shouldLockLoss || isDayLocked);
-    if (lossBtn) lossBtn.disabled = (shouldLockTarget || shouldLockLoss || isDayLocked);
+    if (winBtn) winBtn.disabled = session.isLocked || shouldLockTarget || shouldLockLoss;
+    if (lossBtn) lossBtn.disabled = session.isLocked || shouldLockTarget || shouldLockLoss;
 
     const btnNewDay = document.getElementById('new-day-btn');
-    if (isDayLocked) {
-        btnNewDay.innerText = "🔄 RESUME TRADING";
+    if (session.isLocked) {
+        btnNewDay.innerText = "🔒 RESUME TRADING";
         btnNewDay.style.background = "#475569"; // Grey
         btnNewDay.disabled = false;
-        btnNewDay.onclick = resumeDay;
+        btnNewDay.onclick = toggleLockDay;
     } else {
-        btnNewDay.innerText = "🌅 START NEW DAY";
+        btnNewDay.innerText = "🔒 LOCK DAY";
         btnNewDay.style.background = "var(--primary)";
-        btnNewDay.disabled = session.trades.length === 0;
-        btnNewDay.onclick = startNewDay;
+        btnNewDay.disabled = false;
+        btnNewDay.onclick = toggleLockDay;
     }
 
     updateChart(dtUsd, drUsd);
@@ -294,11 +312,9 @@ function updateCountdownDisplay(element) {
 
 // Ensure the UI refreshes every second to update the countdown
 setInterval(() => {
+    checkMidnightRollover();
     const bn = document.getElementById('status-note');
-    const todayStr = getFormattedDate();
-    const isDayLocked = historyLog.length > 0 && historyLog[0].date === todayStr;
-
-    if (bn && isDayLocked) {
+    if (bn && session.isLocked) {
         updateCountdownDisplay(bn);
     }
 }, 1000);
@@ -482,7 +498,7 @@ function saveAndRefresh() {
 }
 function resetApp() { 
     if(confirm("Clear data for the current account?")) { 
-        session = { trades: [] };
+        session = { trades: [], date: getFormattedDate(), isLocked: false };
         historyLog = [];
         saveAndRefresh();
         location.reload(); 
@@ -508,6 +524,7 @@ function switchAccount(id) {
     openHistoryIds = new Set(['current']);
     undoneSessionTrades = [];
     
+    checkMidnightRollover();
     loadSettingsToUI();
     recalculateState();
     updateUI();
@@ -536,7 +553,7 @@ function createNewAccount() {
         id: id,
         name: name.trim(),
         settings: { balance: 7000, dailyRiskPct: 0.5, dailyTgtPct: 2.0, compoundPct: 33, rr: 5.0, autoLock: true },
-        session: { trades: [] },
+        session: { trades: [], date: getFormattedDate(), isLocked: false },
         historyLog: []
     };
     localStorage.setItem('cap_accounts', JSON.stringify(accounts));

@@ -132,9 +132,41 @@ function attachListeners() {
     });
     const autoLockEl = document.getElementById('set-auto-lock');
     if (autoLockEl) autoLockEl.addEventListener('change', updateSettingsFeedback);
+
+    // Calculator Listener
+    const calcSlEl = document.getElementById('calc-sl');
+    if (calcSlEl) calcSlEl.addEventListener('input', updatePosCalculator);
 }
 
-// --- LOGIC ---
+function updatePosCalculator() {
+    const slInput = document.getElementById('calc-sl');
+    const lotsEl = document.getElementById('calc-lots');
+    const actualRiskEl = document.getElementById('calc-actual-risk');
+    
+    if (!slInput || !lotsEl || !actualRiskEl) return;
+    
+    const slPips = parseFloat(slInput.value);
+    if (isNaN(slPips) || slPips <= 0) {
+        lotsEl.innerText = "0.00";
+        actualRiskEl.innerText = "$0.00";
+        return;
+    }
+    
+    // XAUUSD calculation: 1 Lot = $10 per pip
+    const rawLots = currentRisk / (slPips * 10);
+    const roundedLots = Math.floor(rawLots * 100) / 100;
+    const actualRisk = roundedLots * slPips * 10;
+    
+    lotsEl.innerText = roundedLots.toFixed(2);
+    actualRiskEl.innerText = `$${actualRisk.toFixed(2)}`;
+    
+    if (actualRisk > currentRisk) {
+        actualRiskEl.style.color = "var(--danger)";
+    } else {
+        actualRiskEl.style.color = "var(--primary)";
+    }
+}
+
 function recalculateState() {
     currentPnL = 0; currentStage = 0;
     
@@ -296,6 +328,7 @@ function updateUI() {
         btnNewDay.onclick = toggleLockDay;
     }
 
+    updatePosCalculator();
     updateChart(dtUsd, drUsd);
     switchTab(currentTab);
 }

@@ -37,6 +37,19 @@
             <div id="status-note" class="status-banner"></div>
 
             <div class="controls">
+                <div class="pos-calculator">
+                    <div class="calc-row">
+                        <input type="number" id="calc-sl" placeholder="SL in pips - XAUUSD" class="calc-input" step="any" min="0">
+                        <div class="calc-result">
+                            <span class="calc-label">Lots:</span>
+                            <span id="calc-lots" class="calc-value">0.00</span>
+                        </div>
+                        <div class="calc-result">
+                            <span class="calc-label">Actual Risk:</span>
+                            <span id="calc-actual-risk" class="calc-value">$0.00</span>
+                        </div>
+                    </div>
+                </div>
                 <div class="input-undo-row">
                     <input type="number" id="manual-pnl" placeholder="Manual PnL (Optional)" step="any">
                     <button class="btn-undo" id="btn-undo" title="Undo">⟲</button>

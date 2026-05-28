@@ -792,7 +792,16 @@ function renderCalendar() {
     for (let i = 1; i <= daysInMonth; i++) {
         const d = document.createElement('div'); d.className = 'cal-day'; d.innerHTML = `<span>${i}</span>`;
         const dateStr = `${i} ${viewDate.toLocaleString('default', { month: 'short' })} ${year}`;
-        const dayData = historyLog.find(h => h.date === dateStr);
+        let dayData = historyLog.find(h => h.date === dateStr);
+        
+        if (!dayData && session.date === dateStr && session.trades.length > 0) {
+            dayData = {
+                date: session.date,
+                startBal: settings.balance,
+                endBal: settings.balance + session.trades.reduce((s, t) => s + t.pnl, 0),
+                trades: session.trades
+            };
+        }
 
         if (dayData) {
             const pnl = dayData.endBal - dayData.startBal;
@@ -893,7 +902,20 @@ function renderMainGrowthChart() {
 function renderDailyAccordion() {
     const container = document.getElementById('daily-log-container');
     container.innerHTML = '';
-    historyLog.forEach((day, index) => {
+    
+    const allDays = [...historyLog];
+    if (session.trades.length > 0) {
+        allDays.unshift({
+            date: session.date + " (Today)",
+            startBal: settings.balance,
+            endBal: settings.balance + session.trades.reduce((s, t) => s + t.pnl, 0),
+            trades: session.trades
+        });
+    }
+    
+    window.analyticsDays = allDays;
+
+    allDays.forEach((day, index) => {
         const netPnL = day.endBal - day.startBal;
         const color = netPnL >= 0 ? 'var(--success)' : 'var(--danger)';
         const dayDiv = document.createElement('div');
@@ -937,7 +959,7 @@ window.toggleDayDetails = function (index) {
 };
 
 function renderMiniChart(index) {
-    const day = historyLog[index];
+    const day = window.analyticsDays[index];
     const ctx = document.getElementById(`mini-chart-${index}`).getContext('2d');
     let roll = 0; const pts = [0]; day.trades.forEach(t => { roll += t.pnl; pts.push(roll); });
     new Chart(ctx, { type: 'line', data: { labels: pts.map((_, i) => i), datasets: [{ data: pts, borderColor: '#94a3b8', tension: 0.2, pointRadius: 2, fill: false }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } } });

@@ -655,10 +655,9 @@ tbody tr:last-child td {
 
 @media (min-width: 768px) {
     .analytics-middle-row {
-        display: grid;
-        grid-template-columns: 2.5fr 1fr;
+        display: flex;
+        flex-direction: column;
         gap: 20px;
-        align-items: stretch;
     }
     .calendar-column {
         display: flex;

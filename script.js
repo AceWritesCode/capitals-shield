@@ -245,9 +245,9 @@ function recalculateState() {
     currentPnL = 0; currentStage = 0;
     
     const getRisk = (pnl) => {
-        const bal = settings.balance + pnl;
-        const dRisk = bal * (settings.dailyRiskPct / 100);
-        return dRisk * (settings.compoundPct / 100);
+        const drUsd = settings.balance * (settings.dailyRiskPct / 100);
+        const poolRemaining = drUsd + pnl;
+        return poolRemaining > 0 ? poolRemaining * (settings.compoundPct / 100) : 0;
     };
 
     currentRisk = getRisk(0);
@@ -516,9 +516,9 @@ function switchTab(t) {
             let stStr = st > 0 ? `+${st}` : `${st}`;
             rows += `<tr><td>${stStr}</td><td>$${r.toFixed(1)}</td><td style="color:var(--success)">+$${pr.toFixed(1)}</td><td style="color:${p >= 0 ? 'var(--success)' : 'var(--danger)'}">${p >= 0 ? '+$' : '-$'}${Math.abs(p).toFixed(1)}</td></tr>`;
             
-            let nextBal = settings.balance + p;
-            let nextDRisk = nextBal * (settings.dailyRiskPct / 100);
-            r = nextDRisk * (settings.compoundPct / 100);
+            let drUsd = settings.balance * (settings.dailyRiskPct / 100);
+            let poolRemaining = drUsd + p;
+            r = poolRemaining > 0 ? poolRemaining * (settings.compoundPct / 100) : 0;
         }
         container.innerHTML = `
         <div class="history-item">
@@ -541,9 +541,9 @@ function switchTab(t) {
             rows += `<tr><td>${stStr}</td><td>$${r.toFixed(1)}</td><td style="color:var(--success)">+$${pr.toFixed(1)}</td><td style="color:${p >= 0 ? 'var(--success)' : 'var(--danger)'}">${p >= 0 ? '+$' : '-$'}${Math.abs(p).toFixed(1)}</td></tr>`;
             
             p -= r;
-            let nextBal = settings.balance + p;
-            let nextDRisk = nextBal * (settings.dailyRiskPct / 100);
-            r = nextDRisk * (settings.compoundPct / 100);
+            let drUsd = settings.balance * (settings.dailyRiskPct / 100);
+            let poolRemaining = drUsd + p;
+            r = poolRemaining > 0 ? poolRemaining * (settings.compoundPct / 100) : 0;
         }
         container.innerHTML = `
         <div class="history-item">

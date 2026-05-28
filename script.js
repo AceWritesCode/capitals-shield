@@ -385,7 +385,7 @@ function switchTab(t) {
             let pr = r * settings.rr; p += pr;
             let st = currentStage + i;
             let stStr = st > 0 ? `+${st}` : `${st}`;
-            rows += `<tr><td>${stStr}</td><td>$${r.toFixed(1)}</td><td>$${p.toFixed(1)}</td></tr>`;
+            rows += `<tr><td>${stStr}</td><td>$${r.toFixed(1)}</td><td style="color:var(--success)">+$${pr.toFixed(1)}</td><td>$${p.toFixed(1)}</td></tr>`;
             
             let nextBal = settings.balance + p;
             let nextDRisk = nextBal * (settings.dailyRiskPct / 100);
@@ -398,7 +398,7 @@ function switchTab(t) {
                 <span style="color: var(--success); font-size: 0.7rem;">PROJECTION</span>
             </div>
             <div class="history-day-content active">
-                <table><thead><tr><th>Stage</th><th>Risk</th><th>Total PnL</th></tr></thead><tbody>${rows}</tbody></table>
+                <table><thead><tr><th>Stage</th><th>Risk</th><th>Reward</th><th>Total PnL</th></tr></thead><tbody>${rows}</tbody></table>
             </div>
         </div>`;
 
@@ -408,7 +408,8 @@ function switchTab(t) {
         for (let i = 1; i <= 8; i++) {
             let st = currentStage - i;
             let stStr = st > 0 ? `+${st}` : `${st}`;
-            rows += `<tr><td>${stStr}</td><td>$${r.toFixed(1)}</td><td>$${p.toFixed(1)}</td></tr>`;
+            let pr = r * settings.rr;
+            rows += `<tr><td>${stStr}</td><td>$${r.toFixed(1)}</td><td style="color:var(--success)">+$${pr.toFixed(1)}</td><td>$${p.toFixed(1)}</td></tr>`;
             
             p -= r;
             let nextBal = settings.balance + p;
@@ -422,7 +423,7 @@ function switchTab(t) {
                 <span style="color: var(--danger); font-size: 0.7rem;">SURVIVABILITY</span>
             </div>
             <div class="history-day-content active">
-                <table><thead><tr><th>Stage</th><th>Risk</th><th>Total PnL</th></tr></thead><tbody>${rows}</tbody></table>
+                <table><thead><tr><th>Stage</th><th>Risk</th><th>Reward</th><th>Total PnL</th></tr></thead><tbody>${rows}</tbody></table>
             </div>
         </div>`;
     }

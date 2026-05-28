@@ -125,7 +125,7 @@ body {
 }
 .calc-row {
     display: grid;
-    grid-template-columns: 200px auto auto; /* Less wide input on web */
+    grid-template-columns: 3fr 1fr 1fr; /* 60:20:20 layout */
     gap: 20px;
     align-items: center;
 }
@@ -160,6 +160,7 @@ body {
     font-size: 1rem;
     outline: none;
     width: 80px;
+    border-radius: 0;
 }
 /* Hide native spin buttons */
 .stepper-input::-webkit-inner-spin-button, 
@@ -187,6 +188,7 @@ body {
     cursor: pointer;
     transition: background 0.2s;
     padding: 0;
+    border-radius: 0;
 }
 .stepper-btn:hover {
     background: rgba(255,255,255,0.05);

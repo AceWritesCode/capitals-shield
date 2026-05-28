@@ -511,6 +511,7 @@ function switchAccount(id) {
     loadSettingsToUI();
     recalculateState();
     updateUI();
+    populateSettingsAccountDropdown();
 }
 
 function nextAccount() {

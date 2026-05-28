@@ -341,7 +341,7 @@ function switchTab(t) {
             <div class="history-day-header" onclick="toggleHistoryDay('current')">
                 <span>Today</span>
                 <span style="color: ${sessionPnL >= 0 ? 'var(--success)' : 'var(--danger)'}; font-size: 0.9em;">
-                    $${sessionPnL >= 0 ? '+' : ''}${sessionPnL.toFixed(1)} | $${Math.round(startBal)} ➔ $${Math.round(endBal)} | ${sessionPnL >= 0 ? '+' : ''}${sessionPct}%
+                    ${sessionPnL >= 0 ? '+$' : '-$'}${Math.abs(sessionPnL).toFixed(1)} | $${Math.round(startBal)} ➔ $${Math.round(endBal)} | ${sessionPnL >= 0 ? '+' : ''}${sessionPct}%
                 </span>
             </div>
             <div id="hist-current" class="history-day-content ${isCurrentActive}">
@@ -364,7 +364,7 @@ function switchTab(t) {
                 <div class="history-day-header" onclick="toggleHistoryDay(${index})">
                     <span>${day.date}</span>
                     <span style="color: ${netPnL >= 0 ? 'var(--success)' : 'var(--danger)'}; font-size: 0.9em;">
-                        $${netPnL >= 0 ? '+' : ''}${netPnL.toFixed(1)} | $${Math.round(day.startBal)} ➔ $${Math.round(day.endBal)} | ${netPnL >= 0 ? '+' : ''}${dayPct}%
+                        ${netPnL >= 0 ? '+$' : '-$'}${Math.abs(netPnL).toFixed(1)} | $${Math.round(day.startBal)} ➔ $${Math.round(day.endBal)} | ${netPnL >= 0 ? '+' : ''}${dayPct}%
                     </span>
                 </div>
                 <div id="hist-${index}" class="history-day-content ${isActive}">

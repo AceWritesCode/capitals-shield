@@ -981,8 +981,33 @@ window.toggleDayDetails = function (index) {
 function renderMiniChart(index) {
     const day = window.analyticsDays[index];
     const ctx = document.getElementById(`mini-chart-${index}`).getContext('2d');
-    let roll = 0; const pts = [0]; day.trades.forEach(t => { roll += t.pnl; pts.push(roll); });
-    new Chart(ctx, { type: 'line', data: { labels: pts.map((_, i) => i), datasets: [{ data: pts, borderColor: '#94a3b8', tension: 0.2, pointRadius: 2, fill: false }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } } });
+    let runningPnL = 0; const pts = [0]; 
+    day.trades.forEach(t => { runningPnL += t.pnl; pts.push(runningPnL); });
+    
+    const chartId = `miniChartInstance_${index}`;
+    if (window[chartId]) window[chartId].destroy();
+
+    window[chartId] = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: pts.map((_, i) => i),
+            datasets: [{
+                data: pts,
+                borderColor: runningPnL >= 0 ? '#22c55e' : '#ef4444',
+                backgroundColor: runningPnL >= 0 ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+                borderWidth: 2,
+                pointRadius: 2,
+                tension: 0.3,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false }, tooltip: { enabled: false } },
+            scales: { x: { display: false }, y: { display: false } }
+        }
+    });
 }
 
 init();

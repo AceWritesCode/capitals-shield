@@ -544,25 +544,42 @@ function createNewAccount() {
 }
 
 function editCurrentAccount() {
-    const currentName = accounts[activeAccountId].name;
+    const select = document.getElementById('settings-account-select');
+    const targetId = select ? select.value : activeAccountId;
+    
+    if (!accounts[targetId]) return;
+    const currentName = accounts[targetId].name;
     const newName = prompt("Enter new name for this account:", currentName);
+    
     if (!newName || newName.trim() === '' || newName.trim() === currentName) return;
-    accounts[activeAccountId].name = newName.trim();
+    
+    accounts[targetId].name = newName.trim();
     localStorage.setItem('cap_accounts', JSON.stringify(accounts));
     populateSettingsAccountDropdown();
     updateUI(); // Refresh main dashboard account name
 }
 
 function deleteCurrentAccount() {
+    const select = document.getElementById('settings-account-select');
+    const targetId = select ? select.value : activeAccountId;
+    
     if (Object.keys(accounts).length <= 1) {
         alert("You cannot delete your only account! Create a new one first.");
         return;
     }
-    if (confirm(`Are you sure you want to permanently delete "${accounts[activeAccountId].name}"? This cannot be undone.`)) {
-        delete accounts[activeAccountId];
+    
+    if (!accounts[targetId]) return;
+    
+    if (confirm(`Are you sure you want to permanently delete "${accounts[targetId].name}"? This cannot be undone.`)) {
+        delete accounts[targetId];
         localStorage.setItem('cap_accounts', JSON.stringify(accounts));
-        switchAccount(Object.keys(accounts)[0]);
-        populateSettingsAccountDropdown();
+        
+        // If they deleted the active account, switch to the first available
+        if (activeAccountId === targetId) {
+            switchAccount(Object.keys(accounts)[0]);
+        } else {
+            populateSettingsAccountDropdown();
+        }
     }
 }
 

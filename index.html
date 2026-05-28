@@ -74,12 +74,16 @@
             </div>
             
             <div class="settings-grid">
-                <div class="setting-item" style="grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.05); padding: 10px 15px; border-radius: 8px; margin-bottom: 10px;">
-                    <div style="flex:1;">
+                <div class="setting-item" style="grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.05); padding: 10px 15px; border-radius: 8px; margin-bottom: 10px; flex-wrap: wrap; gap: 10px;">
+                    <div style="flex:1; min-width: 150px;">
                         <label style="margin-bottom: 0;">Active Account</label>
-                        <select id="settings-account-select" style="margin-top: 5px; width: 100%; padding: 8px; border-radius: 4px; background: #1e293b; color: white; border: 1px solid var(--border);"></select>
+                        <div style="display: flex; gap: 5px; margin-top: 5px;">
+                            <select id="settings-account-select" style="flex: 1; padding: 8px; border-radius: 4px; background: #1e293b; color: white; border: 1px solid var(--border);"></select>
+                            <button id="btn-edit-account" style="padding: 8px 10px; background: #475569; color: white; border: none; border-radius: 4px; cursor: pointer;" title="Rename Account">✏️</button>
+                            <button id="btn-del-account" style="padding: 8px 10px; background: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer;" title="Delete Account">🗑️</button>
+                        </div>
                     </div>
-                    <button id="btn-add-account" style="margin-left: 15px; margin-top: 18px; padding: 10px 15px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer;">+ New</button>
+                    <button id="btn-add-account" style="padding: 10px 15px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer; align-self: flex-end;">+ New Account</button>
                 </div>
                 <div class="setting-item">
                     <label>Account Balance ($) <span class="tooltip-icon" data-tooltip="Your total trading capital starting balance.">ⓘ</span></label>

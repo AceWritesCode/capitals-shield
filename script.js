@@ -95,8 +95,11 @@ function attachListeners() {
     document.getElementById('btn-prev-acct').addEventListener('click', prevAccount);
     document.getElementById('btn-next-acct').addEventListener('click', nextAccount);
     document.getElementById('btn-add-account').addEventListener('click', createNewAccount);
-    document.getElementById('btn-edit-account').addEventListener('click', editCurrentAccount);
-    document.getElementById('btn-del-account').addEventListener('click', deleteCurrentAccount);
+    const editBtn = document.getElementById('btn-edit-account');
+    if (editBtn) editBtn.addEventListener('click', editCurrentAccount);
+    const delBtn = document.getElementById('btn-del-account');
+    if (delBtn) delBtn.addEventListener('click', deleteCurrentAccount);
+    
     document.getElementById('settings-account-select').addEventListener('change', (e) => switchAccount(e.target.value));
 
     // Tabs

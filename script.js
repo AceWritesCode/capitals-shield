@@ -343,6 +343,8 @@ function updateUI() {
         document.getElementById('stat-tgt').innerText = `$${Math.round(dtUsd)}`;
         document.getElementById('stat-stop').innerText = `-$${Math.round(drUsd)}`;
         document.getElementById('stat-risk').innerText = `$${currentRisk.toFixed(2)}`;
+        const statPnlLabel = document.getElementById('stat-pnl-label');
+        if (statPnlLabel) statPnlLabel.innerText = `Next Profit (${settings.rr}R)`;
         document.getElementById('stat-pnl').innerText = `$${(currentRisk * settings.rr).toFixed(2)}`;
         document.getElementById('stat-pool').innerText = `$${Math.max(0, poolRemaining).toFixed(1)}`;
 

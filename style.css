@@ -844,11 +844,11 @@ tbody tr:last-child td {
         grid-template-columns: 1fr 1fr;
         gap: 15px;
     }
-    .calc-input {
+    .calc-row > .calc-result:first-child {
         grid-column: 1 / -1;
     }
     .calc-result {
-        align-items: center;
+        align-items: center !important; /* Override inline flex-start on mobile */
         background: rgba(0,0,0,0.2);
         padding: 10px;
         border-radius: 8px;

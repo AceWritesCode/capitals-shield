@@ -146,6 +146,12 @@ function attachListeners() {
     
     const lotsDec = document.getElementById('lots-dec');
     if (lotsDec) lotsDec.addEventListener('click', () => updatePosCalculator('lots-dec'));
+
+    const slInc = document.getElementById('sl-inc');
+    if (slInc) slInc.addEventListener('click', () => updatePosCalculator('sl-inc'));
+
+    const slDec = document.getElementById('sl-dec');
+    if (slDec) slDec.addEventListener('click', () => updatePosCalculator('sl-dec'));
 }
 
 function toggleSlUnit() {
@@ -178,6 +184,16 @@ function updatePosCalculator(source = 'sl') {
     
     if (!slInput || !lotsEl || !actualRiskEl) return;
     
+    if (source === 'sl-inc' || source === 'sl-dec') {
+        let currentSl = parseFloat(slInput.value) || 0;
+        let step = slMode === 'points' ? 1.0 : 0.1;
+        if (source === 'sl-inc') currentSl += step;
+        if (source === 'sl-dec') currentSl -= step;
+        if (currentSl < 0) currentSl = 0;
+        slInput.value = (Math.round(currentSl * 10) / 10).toFixed(1);
+        source = 'sl'; // proceed to update lots based on new SL
+    }
+
     const slVal = parseFloat(slInput.value);
     if (isNaN(slVal) || slVal <= 0) {
         lotsEl.innerText = "0.00";

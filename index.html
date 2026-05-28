@@ -39,9 +39,14 @@
             <div class="controls">
                 <div class="pos-calculator">
                     <div class="calc-row">
-                        <div class="sl-input-group">
-                            <input type="number" id="calc-sl" placeholder="SL in Pips" class="calc-input" step="any" min="0">
-                            <button id="calc-unit-toggle" class="calc-unit-btn">Pips</button>
+                        <div class="calc-result">
+                            <span class="calc-label">Stop Loss:</span>
+                            <div class="lots-control">
+                                <button id="sl-dec" class="lots-btn">-</button>
+                                <input type="number" id="calc-sl" placeholder="0.0" class="calc-input-small" step="any" min="0">
+                                <button id="sl-inc" class="lots-btn">+</button>
+                                <button id="calc-unit-toggle" class="calc-unit-btn-small">Pips</button>
+                            </div>
                         </div>
                         <div class="calc-result">
                             <span class="calc-label">Lots:</span>

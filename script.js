@@ -266,9 +266,11 @@ function updateUI() {
                 bn.style.color = "var(--text)";
                 bn.style.opacity = "0.7";
             } else {
-                bn.innerText = "All systems operational.";
-                bn.style.color = "var(--text)";
-                bn.style.opacity = "0.7";
+                const progressPct = ((currentPnL / settings.balance) * 100).toFixed(1);
+                const prefix = currentPnL >= 0 ? "Up" : "Down";
+                bn.innerText = `${prefix} by ${Math.abs(progressPct)}% ($${currentPnL.toFixed(1)})`;
+                bn.style.color = currentPnL >= 0 ? "var(--success)" : "var(--danger)";
+                bn.style.opacity = "0.8";
             }
         }
     } catch(e) {}

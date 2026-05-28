@@ -959,6 +959,11 @@ function renderDailyAccordion() {
         `;
         container.appendChild(dayDiv);
     });
+
+    if (allDays.length > 0) {
+        // Use setTimeout to ensure DOM is updated before trying to query and render the mini chart
+        setTimeout(() => toggleDayDetails(0), 10);
+    }
 }
 
 window.toggleDayDetails = function (index) {

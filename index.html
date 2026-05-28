@@ -80,7 +80,17 @@
                     </div>
                 </div>
                 <div class="input-undo-row">
-                    <input type="number" id="manual-pnl" placeholder="Manual PnL (Optional)" step="any">
+                    <div class="custom-stepper" style="flex: 1; min-width: 150px;">
+                        <input type="number" id="manual-pnl" class="stepper-input" placeholder="Manual PnL (Optional)" step="any" style="width: 100%;">
+                        <div class="stepper-controls">
+                            <button id="manual-pnl-inc" class="stepper-btn stepper-up">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg>
+                            </button>
+                            <button id="manual-pnl-dec" class="stepper-btn stepper-down">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                            </button>
+                        </div>
+                    </div>
                     <button class="btn-undo" id="btn-undo" title="Undo">⟲</button>
                     <button class="btn-undo" id="btn-redo" title="Redo" style="margin-left: 5px;">⟳</button>
                 </div>

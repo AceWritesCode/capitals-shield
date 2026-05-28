@@ -93,6 +93,15 @@ function attachListeners() {
     document.getElementById('btn-redo').addEventListener('click', redoTrade);
     document.getElementById('btn-reset').addEventListener('click', resetApp);
     
+    document.getElementById('manual-pnl-inc').addEventListener('click', () => {
+        const inp = document.getElementById('manual-pnl');
+        inp.value = (parseFloat(inp.value) || 0) + 1;
+    });
+    document.getElementById('manual-pnl-dec').addEventListener('click', () => {
+        const inp = document.getElementById('manual-pnl');
+        inp.value = (parseFloat(inp.value) || 0) - 1;
+    });
+    
     // Page Navigation
     document.getElementById('go-to-settings').addEventListener('click', () => togglePage('settings-page'));
     document.getElementById('go-to-help').addEventListener('click', () => togglePage('help-page'));
@@ -189,7 +198,7 @@ function updatePosCalculator(source = 'sl') {
     
     if (source === 'sl-inc' || source === 'sl-dec') {
         let currentSl = parseFloat(slInput.value) || 0;
-        let step = slMode === 'points' ? 1.0 : 0.1;
+        let step = slMode === 'points' ? 50.0 : 5.0;
         if (source === 'sl-inc') currentSl += step;
         if (source === 'sl-dec') currentSl -= step;
         if (currentSl < 0) currentSl = 0;

@@ -147,6 +147,9 @@ function attachListeners() {
     const lotsDec = document.getElementById('lots-dec');
     if (lotsDec) lotsDec.addEventListener('click', () => updatePosCalculator('lots-dec'));
 
+    const calcLotsInput = document.getElementById('calc-lots-input');
+    if (calcLotsInput) calcLotsInput.addEventListener('input', () => updatePosCalculator('lots'));
+
     const slInc = document.getElementById('sl-inc');
     if (slInc) slInc.addEventListener('click', () => updatePosCalculator('sl-inc'));
 
@@ -179,7 +182,7 @@ function toggleSlUnit() {
 
 function updatePosCalculator(source = 'sl') {
     const slInput = document.getElementById('calc-sl');
-    const lotsEl = document.getElementById('calc-lots');
+    const lotsEl = document.getElementById('calc-lots-input');
     const actualRiskEl = document.getElementById('calc-actual-risk');
     
     if (!slInput || !lotsEl || !actualRiskEl) return;
@@ -196,7 +199,7 @@ function updatePosCalculator(source = 'sl') {
 
     const slVal = parseFloat(slInput.value);
     if (isNaN(slVal) || slVal <= 0) {
-        lotsEl.innerText = "0.00";
+        lotsEl.value = "0.00";
         actualRiskEl.innerText = "$0.00";
         return;
     }
@@ -207,16 +210,16 @@ function updatePosCalculator(source = 'sl') {
     if (source === 'sl' || source === 'update') {
         const rawLots = currentRisk / (slPips * 10);
         roundedLots = Math.floor(rawLots * 100) / 100;
-        lotsEl.innerText = roundedLots.toFixed(2);
+        lotsEl.value = roundedLots.toFixed(2);
     } else {
-        roundedLots = parseFloat(lotsEl.innerText) || 0;
+        roundedLots = parseFloat(lotsEl.value) || 0;
         if (source === 'lots-inc') roundedLots += 0.01;
         if (source === 'lots-dec') roundedLots -= 0.01;
         if (roundedLots < 0) roundedLots = 0;
         
         // fix floating point precision
         roundedLots = Math.round(roundedLots * 100) / 100;
-        lotsEl.innerText = roundedLots.toFixed(2);
+        lotsEl.value = roundedLots.toFixed(2);
     }
     
     const actualRisk = roundedLots * slPips * 10;

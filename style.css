@@ -143,63 +143,74 @@ body {
 }
 .calc-input-small:focus {
     border-color: var(--primary);
+}.custom-stepper {
+    display: flex;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: transparent;
+    overflow: hidden;
+    height: 38px;
 }
-/* Hide spin buttons for number inputs */
-.calc-input-small::-webkit-inner-spin-button, 
-.calc-input-small::-webkit-outer-spin-button { 
+.stepper-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: white;
+    padding: 0 12px;
+    font-size: 1rem;
+    outline: none;
+    width: 80px;
+}
+/* Hide native spin buttons */
+.stepper-input::-webkit-inner-spin-button, 
+.stepper-input::-webkit-outer-spin-button { 
     -webkit-appearance: none; 
     margin: 0; 
 }
-.calc-input-small[type=number] {
+.stepper-input[type=number] {
     -moz-appearance: textfield;
+}
+.stepper-controls {
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid var(--border);
+    width: 28px;
+}
+.stepper-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+    padding: 0;
+}
+.stepper-btn:hover {
+    background: rgba(255,255,255,0.05);
+    color: white;
+}
+.stepper-up {
+    border-bottom: 1px solid var(--border);
 }
 
 .calc-unit-btn-small {
     background: rgba(30, 41, 59, 0.6);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: 8px;
     color: var(--text-muted);
-    padding: 6px 10px;
-    margin-left: 4px;
+    padding: 6px 12px;
     cursor: pointer;
     font-size: 0.75rem;
     font-weight: 700;
     transition: all 0.2s;
+    height: 38px;
 }
 .calc-unit-btn-small:hover {
     background: rgba(255,255,255,0.1);
     color: var(--text);
-}
-.lots-control {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.lots-btn {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 50%;
-    width: 26px;
-    height: 26px;
-    color: var(--text);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 1.1rem;
-    padding: 0;
-    line-height: 1;
-    transition: all 0.2s;
-}
-.lots-btn:hover {
-    border-color: var(--primary);
-    color: var(--primary);
-}
-.calc-input:focus {
-    border-color: var(--primary);
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 .calc-result {
     display: flex;

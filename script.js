@@ -14,7 +14,7 @@ if (Object.keys(accounts).length === 0) {
         accounts['acct_1'] = {
             id: 'acct_1',
             name: 'Account 1',
-            settings: { balance: 7000, dailyRiskPct: 0.5, dailyTgtPct: 2.0, compoundPct: 33, rr: 5.0, autoLock: true },
+            settings: { balance: 10000, dailyRiskPct: 10, dailyTgtPct: 10, compoundPct: 33, rr: 1.3, autoLock: true },
             session: { trades: [], date: getFormattedDate(), isLocked: false },
             historyLog: []
         };
@@ -665,7 +665,7 @@ function createNewAccount() {
     accounts[id] = {
         id: id,
         name: name.trim(),
-        settings: { balance: 7000, dailyRiskPct: 0.5, dailyTgtPct: 2.0, compoundPct: 33, rr: 5.0, autoLock: true },
+        settings: { balance: 10000, dailyRiskPct: 10, dailyTgtPct: 10, compoundPct: 33, rr: 1.3, autoLock: true },
         session: { trades: [], date: getFormattedDate(), isLocked: false },
         historyLog: []
     };

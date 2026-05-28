@@ -368,7 +368,7 @@ function switchTab(t) {
                 <table>
                     <thead><tr><th>Gain %</th><th>Type</th><th>PnL</th></tr></thead>
                     <tbody>
-                        ${session.trades.length > 0 ? [...session.trades].reverse().map(tr => `<tr><td style="color:${tr.pnl >= 0 ? 'var(--success)' : 'var(--danger)'}">${tr.pnl >= 0 ? '+' : ''}${((tr.pnl / startBal) * 100).toFixed(2)}%</td><td>${tr.type.toUpperCase()}</td><td style="color:${tr.pnl >= 0 ? 'var(--success)' : 'var(--danger)'}; font-weight:bold">$${tr.pnl.toFixed(2)}</td></tr>`).join('') : '<tr><td colspan="3" style="text-align:center; padding:20px; color:#64748b; font-style:italic;">No trades logged yet</td></tr>'}
+                        ${session.trades.length > 0 ? [...session.trades].reverse().map(tr => `<tr><td style="color:${tr.pnl >= 0 ? 'var(--success)' : 'var(--danger)'}">${tr.pnl >= 0 ? '+' : ''}${((tr.pnl / startBal) * 100).toFixed(2)}%</td><td>${tr.type.toUpperCase()}</td><td style="color:${tr.pnl >= 0 ? 'var(--success)' : 'var(--danger)'}; font-weight:bold">${tr.pnl >= 0 ? '+$' : '-$'}${Math.abs(tr.pnl).toFixed(2)}</td></tr>`).join('') : '<tr><td colspan="3" style="text-align:center; padding:20px; color:#64748b; font-style:italic;">No trades logged yet</td></tr>'}
                     </tbody>
                 </table>
             </div>
@@ -391,7 +391,7 @@ function switchTab(t) {
                     <table>
                         <thead><tr><th>Gain %</th><th>Type</th><th>PnL</th></tr></thead>
                         <tbody>
-                            ${[...day.trades].reverse().map(tr => `<tr><td style="color:${tr.pnl >= 0 ? 'var(--success)' : 'var(--danger)'}">${tr.pnl >= 0 ? '+' : ''}${((tr.pnl / day.startBal) * 100).toFixed(2)}%</td><td>${tr.type.toUpperCase()}</td><td style="color:${tr.pnl >= 0 ? 'var(--success)' : 'var(--danger)'}; font-weight:bold">$${tr.pnl.toFixed(2)}</td></tr>`).join('')}
+                            ${[...day.trades].reverse().map(tr => `<tr><td style="color:${tr.pnl >= 0 ? 'var(--success)' : 'var(--danger)'}">${tr.pnl >= 0 ? '+' : ''}${((tr.pnl / day.startBal) * 100).toFixed(2)}%</td><td>${tr.type.toUpperCase()}</td><td style="color:${tr.pnl >= 0 ? 'var(--success)' : 'var(--danger)'}; font-weight:bold">${tr.pnl >= 0 ? '+$' : '-$'}${Math.abs(tr.pnl).toFixed(2)}</td></tr>`).join('')}
                         </tbody>
                     </table>
                 </div>
@@ -405,7 +405,7 @@ function switchTab(t) {
             let pr = r * settings.rr; p += pr;
             let st = currentStage + i;
             let stStr = st > 0 ? `+${st}` : `${st}`;
-            rows += `<tr><td>${stStr}</td><td>$${r.toFixed(1)}</td><td style="color:var(--success)">+$${pr.toFixed(1)}</td><td>$${p.toFixed(1)}</td></tr>`;
+            rows += `<tr><td>${stStr}</td><td>$${r.toFixed(1)}</td><td style="color:var(--success)">+$${pr.toFixed(1)}</td><td style="color:${p >= 0 ? 'var(--success)' : 'var(--danger)'}">${p >= 0 ? '+$' : '-$'}${Math.abs(p).toFixed(1)}</td></tr>`;
             
             let nextBal = settings.balance + p;
             let nextDRisk = nextBal * (settings.dailyRiskPct / 100);
@@ -429,7 +429,7 @@ function switchTab(t) {
             let st = currentStage - i;
             let stStr = st > 0 ? `+${st}` : `${st}`;
             let pr = r * settings.rr;
-            rows += `<tr><td>${stStr}</td><td>$${r.toFixed(1)}</td><td style="color:var(--success)">+$${pr.toFixed(1)}</td><td>$${p.toFixed(1)}</td></tr>`;
+            rows += `<tr><td>${stStr}</td><td>$${r.toFixed(1)}</td><td style="color:var(--success)">+$${pr.toFixed(1)}</td><td style="color:${p >= 0 ? 'var(--success)' : 'var(--danger)'}">${p >= 0 ? '+$' : '-$'}${Math.abs(p).toFixed(1)}</td></tr>`;
             
             p -= r;
             let nextBal = settings.balance + p;
@@ -814,7 +814,7 @@ function renderDailyAccordion() {
                             <tr>
                                 <td>${t.time}</td>
                                 <td>${t.type.toUpperCase()}</td>
-                                <td style="color: ${t.pnl >= 0 ? 'var(--success)' : 'var(--danger)'}">$${t.pnl.toFixed(2)}</td>
+                                <td style="color: ${t.pnl >= 0 ? 'var(--success)' : 'var(--danger)'}">${t.pnl >= 0 ? '+$' : '-$'}${Math.abs(t.pnl).toFixed(2)}</td>
                                 <td>${t.pnl >= 0 ? (t.riskAtTime ? (t.pnl / t.riskAtTime).toFixed(1) + 'R' : 'N/A') : '-1.0R'}</td>
                             </tr>
                         `).join('')}

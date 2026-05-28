@@ -334,6 +334,7 @@ button:disabled {
     border-left: 1px solid var(--border);
     border-right: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
+    border-radius: 0 0 8px 8px;
     background: #1e293b;
     margin-bottom: 15px;
 }
@@ -356,8 +357,6 @@ button:disabled {
 .tab.active {
     color: var(--primary);
     font-weight: bold;
-    border-bottom: 2px solid var(--primary);
-    background: var(--bg);
 }
 
 .content-area {

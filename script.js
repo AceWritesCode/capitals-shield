@@ -346,9 +346,9 @@ function switchTab(t) {
             </div>
             <div id="hist-current" class="history-day-content ${isCurrentActive}">
                 <table>
-                    <thead><tr><th>Time</th><th>Type</th><th>PnL</th></tr></thead>
+                    <thead><tr><th>Gain %</th><th>Type</th><th>PnL</th></tr></thead>
                     <tbody>
-                        ${session.trades.length > 0 ? [...session.trades].reverse().map(tr => `<tr><td>${tr.time}</td><td>${tr.type.toUpperCase()}</td><td style="color:${tr.pnl >= 0 ? 'var(--success)' : 'var(--danger)'}; font-weight:bold">$${tr.pnl.toFixed(2)}</td></tr>`).join('') : '<tr><td colspan="3" style="text-align:center; padding:20px; color:#64748b; font-style:italic;">No trades logged yet</td></tr>'}
+                        ${session.trades.length > 0 ? [...session.trades].reverse().map(tr => `<tr><td style="color:${tr.pnl >= 0 ? 'var(--success)' : 'var(--danger)'}">${tr.pnl >= 0 ? '+' : ''}${((tr.pnl / startBal) * 100).toFixed(2)}%</td><td>${tr.type.toUpperCase()}</td><td style="color:${tr.pnl >= 0 ? 'var(--success)' : 'var(--danger)'}; font-weight:bold">$${tr.pnl.toFixed(2)}</td></tr>`).join('') : '<tr><td colspan="3" style="text-align:center; padding:20px; color:#64748b; font-style:italic;">No trades logged yet</td></tr>'}
                     </tbody>
                 </table>
             </div>
@@ -369,9 +369,9 @@ function switchTab(t) {
                 </div>
                 <div id="hist-${index}" class="history-day-content ${isActive}">
                     <table>
-                        <thead><tr><th>Time</th><th>Type</th><th>PnL</th></tr></thead>
+                        <thead><tr><th>Gain %</th><th>Type</th><th>PnL</th></tr></thead>
                         <tbody>
-                            ${[...day.trades].reverse().map(tr => `<tr><td>${tr.time}</td><td>${tr.type.toUpperCase()}</td><td style="color:${tr.pnl >= 0 ? 'var(--success)' : 'var(--danger)'}; font-weight:bold">$${tr.pnl.toFixed(2)}</td></tr>`).join('')}
+                            ${[...day.trades].reverse().map(tr => `<tr><td style="color:${tr.pnl >= 0 ? 'var(--success)' : 'var(--danger)'}">${tr.pnl >= 0 ? '+' : ''}${((tr.pnl / day.startBal) * 100).toFixed(2)}%</td><td>${tr.type.toUpperCase()}</td><td style="color:${tr.pnl >= 0 ? 'var(--success)' : 'var(--danger)'}; font-weight:bold">$${tr.pnl.toFixed(2)}</td></tr>`).join('')}
                         </tbody>
                     </table>
                 </div>

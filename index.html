@@ -22,7 +22,10 @@
             </div>
 
             <div class="stats-grid">
-                <div class="stat-card"><span class="stat-label">Acct Bal</span><span id="stat-bal" class="stat-value">$0</span></div>
+                <div class="stat-card" style="cursor: pointer; position: relative; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--primary)'; this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.borderColor='var(--border)'; this.style.background='var(--card)'">
+                    <span class="stat-label" style="display:flex; justify-content:center; align-items:center; gap:4px;">Acct Bal <span style="color:var(--primary); font-size:1.2rem; line-height:0.5;">›</span></span>
+                    <span id="stat-bal" class="stat-value">$0</span>
+                </div>
                 <div class="stat-card"><span class="stat-label">Daily Tgt</span><span id="stat-tgt" class="stat-value">$0</span></div>
                 <div class="stat-card"><span class="stat-label">Daily Stop</span><span id="stat-stop" class="stat-value">$0</span></div>
                 <div class="stat-card highlight"><span class="stat-label">Next Risk</span><span id="stat-risk" class="stat-value">$0</span></div>

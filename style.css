@@ -117,42 +117,52 @@ body {
 
 /* Controls */
 .pos-calculator {
-    background: var(--card-bg);
+    background: rgba(30, 41, 59, 0.4);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 12px;
-    margin-bottom: 12px;
+    padding: 15px;
+    margin-bottom: 15px;
 }
 .calc-row {
-    display: flex;
-    gap: 15px;
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 20px;
     align-items: center;
-    flex-wrap: wrap;
 }
 .calc-input {
-    flex: 1;
-    min-width: 150px;
-    padding: 8px 12px;
+    width: 100%;
+    padding: 10px 15px;
     border-radius: var(--radius);
     border: 1px solid var(--border);
     background: var(--bg);
     color: var(--text);
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+}
+.calc-input:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 .calc-result {
     display: flex;
     flex-direction: column;
-    min-width: 70px;
+    align-items: flex-end;
 }
 .calc-label {
     font-size: 0.65rem;
-    color: #94a3b8;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
     text-transform: uppercase;
     font-weight: 600;
+    margin-bottom: 2px;
 }
 .calc-value {
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     font-weight: 700;
+    color: var(--text);
+}
+#calc-actual-risk {
     color: var(--primary);
 }
 
@@ -757,4 +767,20 @@ tbody tr:last-child td {
 .mini-detail {
     height: 150px;
     margin-bottom: 20px;
+}
+@media (max-width: 600px) {
+    .calc-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+    .calc-input {
+        grid-column: 1 / -1;
+    }
+    .calc-result {
+        align-items: flex-start;
+        background: rgba(0,0,0,0.2);
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+    }
 }

@@ -23,10 +23,12 @@
                 <div class="form-group">
                     <label>Starting Balance ($)</label>
                     <input type="number" id="sim-bal" value="1000" min="10">
+                    <div class="input-helper-text">Initial capital for the simulation.</div>
                 </div>
                 <div class="form-group">
                     <label id="lbl-growth">Growth Target (Multiple)</label>
-                    <input type="number" id="sim-growth" value="1" min="0.1" step="0.1">
+                    <input type="number" id="sim-growth" value="1" min="0.1" step="0.1" oninput="updateGrowthHelper()">
+                    <div id="growth-helper" class="input-helper-text">Simulation stops at 1.0X profit.</div>
                 </div>
             </div>
 
@@ -34,30 +36,34 @@
                 <div class="form-group">
                     <label>Daily Risk Pool (%)</label>
                     <input type="number" id="sim-dr" value="10" min="0.1" step="0.1">
+                    <div class="input-helper-text">Max account % risked per day.</div>
                 </div>
                 <div class="form-group">
                     <label>Compound Risk (%)</label>
                     <input type="number" id="sim-cr" value="33" min="1" max="100">
+                    <div class="input-helper-text">% of daily pool risked per trade.</div>
                 </div>
             </div>
 
             <div class="form-group">
                 <label>Win Rate (%)</label>
                 <input type="number" id="sim-wr" value="50" min="1" max="100">
+                <div class="input-helper-text">Expected percentage of winning trades.</div>
             </div>
 
             <div class="form-group">
                 <label>
                     Daily Profit Target (%)
                     <div class="toggle-row">
-                        <span style="font-size:0.7rem; font-weight:normal;">ON/OFF</span>
+                        <span style="font-size:0.7rem; font-weight:normal;">OFF/ON</span>
                         <label class="toggle-switch">
-                            <input type="checkbox" id="sim-target-toggle" checked onchange="document.getElementById('sim-target').disabled = !this.checked">
+                            <input type="checkbox" id="sim-target-toggle" checked onchange="document.getElementById('sim-target').disabled = !this.checked; updateTargetHelper(this.checked)">
                             <span class="slider-toggle"></span>
                         </label>
                     </div>
                 </label>
                 <input type="number" id="sim-target" value="10" min="0.1" step="0.1">
+                <div id="target-helper" class="input-helper-text">Stop trading for the day if this profit is reached.</div>
             </div>
 
             <div class="row-2">
@@ -67,10 +73,12 @@
                         <option value="fixed">Fixed</option>
                         <option value="random">Random</option>
                     </select>
+                    <div class="input-helper-text">Fixed amount or randomized frequency.</div>
                 </div>
                 <div class="form-group">
                     <label id="lbl-trades-count">Trades / Day</label>
-                    <input type="number" id="sim-trades-count" value="5" min="1" max="20">
+                    <input type="number" id="sim-trades-count" value="5" min="1" max="20" oninput="updateTradesHelper()">
+                    <div id="trades-count-helper" class="input-helper-text">Takes exactly 5 trades each day.</div>
                 </div>
             </div>
 
@@ -81,10 +89,12 @@
                         <option value="fixed">Fixed</option>
                         <option value="dynamic">Dynamic</option>
                     </select>
+                    <div class="input-helper-text">Fixed ratio or randomized range.</div>
                 </div>
                 <div class="form-group" id="rr-fixed-ui">
                     <label>Fixed RR</label>
-                    <input type="number" id="sim-rr-fixed" value="1.5" min="0.1" step="0.1">
+                    <input type="number" id="sim-rr-fixed" value="1.5" min="0.1" step="0.1" oninput="updateRRHelper()">
+                    <div id="rr-fixed-helper" class="input-helper-text">You are expecting to win 1.5X of risk taken on each trade.</div>
                 </div>
             </div>
 
@@ -94,11 +104,12 @@
                     <input type="number" id="sim-rr-min" class="range-input-box" value="1.0" min="0" max="20" step="0.1" onchange="syncSlider('min')">
                     <div class="dual-slider">
                         <div class="slider-track" id="slider-track"></div>
-                        <input type="range" id="sim-slider-min" min="0" max="20" step="0.1" value="1.0" oninput="syncInput('min')">
-                        <input type="range" id="sim-slider-max" min="0" max="20" step="0.1" value="3.0" oninput="syncInput('max')">
+                        <input type="range" id="sim-slider-min" min="0" max="20" step="0.1" value="1.0" oninput="syncInput('min'); updateRRHelper()">
+                        <input type="range" id="sim-slider-max" min="0" max="20" step="0.1" value="3.0" oninput="syncInput('max'); updateRRHelper()">
                     </div>
-                    <input type="number" id="sim-rr-max" class="range-input-box" value="3.0" min="0" max="20" step="0.1" onchange="syncSlider('max')">
+                    <input type="number" id="sim-rr-max" class="range-input-box" value="3.0" min="0" max="20" step="0.1" onchange="syncSlider('max'); updateRRHelper()" oninput="updateRRHelper()">
                 </div>
+                <div id="rr-dynamic-helper" class="input-helper-text" style="text-align: center; margin-top: 8px;">You are expecting to win 1.0X to 3.0X of risk taken on each trade.</div>
             </div>
 
             <button class="run-btn" onclick="runSimulation()">▶️ Run Simulation</button>
@@ -108,7 +119,7 @@
         <div class="center-col">
             <div class="stats-grid">
                 <div class="stat-card"><span>Start Balance</span><b id="res-start">$0</b></div>
-                <div class="stat-card"><span>Final Balance</span><b id="res-final" style="color:var(--success)">$0 (0x)</b></div>
+                <div class="stat-card"><span id="lbl-final-bal">Final Balance</span><b id="res-final" style="color:var(--success)">$0 (0x)</b></div>
                 <div class="stat-card"><span>Actual Winrate</span><b id="res-wr">0%</b></div>
                 <div class="stat-card"><span>Average RR</span><b id="res-rr">0.0</b></div>
                 <div class="stat-card"><span>Account Growth</span><b id="res-growth" style="color:var(--primary)">0%</b></div>

@@ -26,14 +26,15 @@ body { font-family: 'Inter', sans-serif; background: var(--bg-dark); color: var(
 .sim-container.empty-state .history-feed { display: none; }
 
 /* Left Panel Controls */
-.controls-panel { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 15px; height: 100%; overflow-y: auto; }
-.controls-panel h2 { font-size: 1.1rem; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 5px; }
+.controls-panel { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 10px; height: 100%; overflow-y: auto; -ms-overflow-style: none; scrollbar-width: none; }
+.controls-panel::-webkit-scrollbar { display: none; }
+.controls-panel h2 { font-size: 1.1rem; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 2px; }
 
-.row-2 { display: flex; gap: 10px; }
+.row-2 { display: flex; gap: 10px; align-items: flex-start; }
 .row-2 > .form-group { flex: 1; min-width: 0; }
 
 .form-group { display: flex; flex-direction: column; gap: 5px; }
-.form-group > label { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; display: flex; justify-content: space-between; align-items: center; margin-bottom: auto; }
+.form-group > label { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
 .form-group select { background: var(--bg-dark); border: 1px solid var(--border); color: var(--text); padding: 10px; border-radius: 6px; outline: none; font-family: inherit; font-size: 0.95rem; }
 .form-group select:focus { border-color: var(--primary); }
 
@@ -45,6 +46,9 @@ body { font-family: 'Inter', sans-serif; background: var(--bg-dark); color: var(
 .custom-stepper:focus-within { border-color: var(--primary); }
 .stepper-input { flex: 1; background: transparent; border: none; color: var(--text); padding: 0 10px; width: 100%; outline: none; font-family: inherit; font-size: 0.95rem; -moz-appearance: textfield; min-width: 0; }
 .stepper-input::-webkit-inner-spin-button, .stepper-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+
+.input-helper-text { font-size: 0.75rem; color: var(--primary); margin-top: 4px; }
+
 .stepper-controls { display: flex; flex-direction: column; border-left: 1px solid var(--border); width: 24px; }
 .stepper-btn { flex: 1; background: transparent; border: none; color: var(--text-muted); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; padding: 0; }
 .stepper-btn:hover { background: rgba(255,255,255,0.05); color: white; }

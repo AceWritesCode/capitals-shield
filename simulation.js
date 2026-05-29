@@ -98,6 +98,17 @@ function toggleGrowthType() {
         input.value = multVal.toFixed(2);
         input.step = 0.1;
     }
+    updateGrowthHelper();
+}
+
+function updateGrowthHelper() {
+    const val = parseFloat(document.getElementById('sim-growth').value) || 0;
+    const helper = document.getElementById('growth-helper');
+    if (growthType === 'currency') {
+        helper.innerText = `Simulation stops at $${val.toFixed(0)} target.`;
+    } else {
+        helper.innerText = `Simulation stops at ${val.toFixed(2)}X profit.`;
+    }
 }
 
 function toggleRRUI() {
@@ -110,6 +121,39 @@ function toggleRRUI() {
 function toggleTradesUI() {
     const type = document.getElementById('sim-trades-type').value;
     document.getElementById('lbl-trades-count').innerText = type === 'fixed' ? 'Trades / Day' : 'Trades / Day (Max)';
+    updateTradesHelper();
+}
+
+function updateTargetHelper(isChecked) {
+    const helper = document.getElementById('target-helper');
+    if (isChecked) {
+        helper.innerText = "Stop trading for the day if this profit is reached.";
+    } else {
+        helper.innerText = "Daily profit target is currently disabled.";
+    }
+}
+
+function updateTradesHelper() {
+    const type = document.getElementById('sim-trades-type').value;
+    const val = document.getElementById('sim-trades-count').value;
+    const helper = document.getElementById('trades-count-helper');
+    if (type === 'fixed') {
+        helper.innerText = `Takes exactly ${val} trades each day.`;
+    } else {
+        helper.innerText = `Takes up to ${val} trades each day.`;
+    }
+}
+
+function updateRRHelper() {
+    const type = document.getElementById('sim-rr-type').value;
+    if (type === 'fixed') {
+        const fixedVal = document.getElementById('sim-rr-fixed').value;
+        document.getElementById('rr-fixed-helper').innerText = `You are expecting to win ${fixedVal}X of risk taken on each trade.`;
+    } else {
+        const minVal = document.getElementById('sim-rr-min').value;
+        const maxVal = document.getElementById('sim-rr-max').value;
+        document.getElementById('rr-dynamic-helper').innerText = `You are expecting to win ${minVal}X to ${maxVal}X of risk taken on each trade.`;
+    }
 }
 
 function syncInput(source) {
@@ -331,6 +375,8 @@ function renderResults(startBal, currentBalance, targetBalance, totalWins, total
     const resFinal = document.getElementById('res-final');
     resFinal.innerText = `$${Math.round(currentBalance).toLocaleString()} (${multiple}x)`;
     resFinal.style.color = currentBalance >= startBal ? 'var(--success)' : 'var(--danger)';
+    
+    document.getElementById('lbl-final-bal').innerText = currentBalance >= targetBalance ? 'Account Flipped to' : 'Final Balance';
     
     document.getElementById('res-wr').innerText = `${actualWr}%`;
     document.getElementById('res-rr').innerText = `${avgRr}R`;

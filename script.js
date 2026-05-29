@@ -93,13 +93,24 @@ function attachListeners() {
     document.getElementById('btn-redo').addEventListener('click', redoTrade);
     document.getElementById('btn-reset').addEventListener('click', resetApp);
     
+    document.getElementById('manual-pnl').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            const inp = e.target;
+            const res = evalMath(inp.value);
+            inp.value = res !== '' ? res : inp.value;
+        }
+    });
+    
     document.getElementById('manual-pnl-inc').addEventListener('click', () => {
         const inp = document.getElementById('manual-pnl');
-        inp.value = (parseFloat(inp.value) || 0) + 1;
+        let val = evalMath(inp.value) || 0;
+        inp.value = val + 1;
     });
     document.getElementById('manual-pnl-dec').addEventListener('click', () => {
         const inp = document.getElementById('manual-pnl');
-        inp.value = (parseFloat(inp.value) || 0) - 1;
+        let val = evalMath(inp.value) || 0;
+        inp.value = val - 1;
     });
     
     // Page Navigation
@@ -264,9 +275,22 @@ function recalculateState() {
     });
 }
 
+function evalMath(expr) {
+    if (!expr) return '';
+    try {
+        let sanitized = String(expr).replace(/[^0-9+\-*/(). ]/g, '');
+        if (!sanitized) return '';
+        let result = Function(`"use strict"; return (${sanitized})`)();
+        return isNaN(result) ? '' : Math.round(result * 100) / 100;
+    } catch (e) {
+        return '';
+    }
+}
+
 function handleTrade(type) {
-    const manual = document.getElementById('manual-pnl').value;
-    let pnl = (type === 'win') ? (manual ? Math.abs(parseFloat(manual)) : (currentRisk * settings.rr)) : (manual ? -Math.abs(parseFloat(manual)) : -currentRisk);
+    const rawManual = document.getElementById('manual-pnl').value;
+    const manual = evalMath(rawManual);
+    let pnl = (type === 'win') ? (manual !== '' ? Math.abs(parseFloat(manual)) : (currentRisk * settings.rr)) : (manual !== '' ? -Math.abs(parseFloat(manual)) : -currentRisk);
     
     // Track risk at time of trade for accurate RR calculation in analytics
     const riskAtTime = currentRisk;

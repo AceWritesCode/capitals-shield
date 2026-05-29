@@ -116,6 +116,7 @@ function attachListeners() {
     // Page Navigation
     document.getElementById('go-to-settings').addEventListener('click', () => togglePage('settings-page'));
     document.getElementById('go-to-help').addEventListener('click', () => togglePage('help-page'));
+    document.getElementById('go-to-simulation').addEventListener('click', () => { window.location.href = 'simulation.html'; });
     document.getElementById('btn-settings-done').addEventListener('click', tryCloseSettings);
     document.getElementById('btn-help-back').addEventListener('click', () => togglePage('main-page'));
 

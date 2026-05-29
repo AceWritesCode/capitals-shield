@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulation - Capital's Shield</title>
+    <link rel="stylesheet" href="simulation.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="header">
+        <div class="title-container">
+            <h1>🧪 Simulation Engine</h1>
+        </div>
+        <button class="btn-back" onclick="window.location.href='index.html'">🔙 Back to App</button>
+    </div>
+    <div class="sim-container empty-state" id="sim-container">
+        <!-- Left Panel: Controls -->
+        <div class="controls-panel">
+            <h2>Parameters</h2>
+            
+            <div class="row-2">
+                <div class="form-group">
+                    <label>Starting Balance ($)</label>
+                    <input type="number" id="sim-bal" value="1000" min="10">
+                </div>
+                <div class="form-group">
+                    <label id="lbl-growth">Growth Target (Multiple)</label>
+                    <input type="number" id="sim-growth" value="1" min="0.1" step="0.1">
+                </div>
+            </div>
+
+            <div class="row-2">
+                <div class="form-group">
+                    <label>Daily Risk Pool (%)</label>
+                    <input type="number" id="sim-dr" value="10" min="0.1" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label>Compound Risk (%)</label>
+                    <input type="number" id="sim-cr" value="33" min="1" max="100">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Win Rate (%)</label>
+                <input type="number" id="sim-wr" value="50" min="1" max="100">
+            </div>
+
+            <div class="form-group">
+                <label>
+                    Daily Profit Target (%)
+                    <div class="toggle-row">
+                        <span style="font-size:0.7rem; font-weight:normal;">ON/OFF</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="sim-target-toggle" checked onchange="document.getElementById('sim-target').disabled = !this.checked">
+                            <span class="slider-toggle"></span>
+                        </label>
+                    </div>
+                </label>
+                <input type="number" id="sim-target" value="10" min="0.1" step="0.1">
+            </div>
+
+            <div class="row-2">
+                <div class="form-group">
+                    <label>Trades per Day</label>
+                    <select id="sim-trades-type" onchange="toggleTradesUI()">
+                        <option value="fixed">Fixed</option>
+                        <option value="random">Random</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label id="lbl-trades-count">Trades / Day</label>
+                    <input type="number" id="sim-trades-count" value="5" min="1" max="20">
+                </div>
+            </div>
+
+            <div class="row-2">
+                <div class="form-group">
+                    <label>Risk/Reward (RR) Type</label>
+                    <select id="sim-rr-type" onchange="toggleRRUI()">
+                        <option value="fixed">Fixed</option>
+                        <option value="dynamic">Dynamic</option>
+                    </select>
+                </div>
+                <div class="form-group" id="rr-fixed-ui">
+                    <label>Fixed RR</label>
+                    <input type="number" id="sim-rr-fixed" value="1.5" min="0.1" step="0.1">
+                </div>
+            </div>
+
+            <div class="form-group" id="rr-dynamic-ui" style="display: none;">
+                <label>Dynamic RR Range (Min - Max)</label>
+                <div class="range-container">
+                    <input type="number" id="sim-rr-min" class="range-input-box" value="1.0" min="0" max="20" step="0.1" onchange="syncSlider('min')">
+                    <div class="dual-slider">
+                        <div class="slider-track" id="slider-track"></div>
+                        <input type="range" id="sim-slider-min" min="0" max="20" step="0.1" value="1.0" oninput="syncInput('min')">
+                        <input type="range" id="sim-slider-max" min="0" max="20" step="0.1" value="3.0" oninput="syncInput('max')">
+                    </div>
+                    <input type="number" id="sim-rr-max" class="range-input-box" value="3.0" min="0" max="20" step="0.1" onchange="syncSlider('max')">
+                </div>
+            </div>
+
+            <button class="run-btn" onclick="runSimulation()">▶️ Run Simulation</button>
+        </div>
+
+        <!-- Center Panel: Results -->
+        <div class="center-col">
+            <div class="stats-grid">
+                <div class="stat-card"><span>Start Balance</span><b id="res-start">$0</b></div>
+                <div class="stat-card"><span>Final Balance</span><b id="res-final" style="color:var(--success)">$0 (0x)</b></div>
+                <div class="stat-card"><span>Actual Winrate</span><b id="res-wr">0%</b></div>
+                <div class="stat-card"><span>Average RR</span><b id="res-rr">0.0</b></div>
+                <div class="stat-card"><span>Account Growth</span><b id="res-growth" style="color:var(--primary)">0%</b></div>
+                <div class="stat-card"><span>Trades / Days</span><b id="res-days">0 / 0</b></div>
+            </div>
+
+            <div class="chart-container">
+                <span class="chart-placeholder" id="chart-placeholder">Run simulation to view equity curve...</span>
+                <canvas id="simChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Right Panel: History -->
+        <div class="history-feed" id="history-feed">
+            <!-- Daily tables injected here -->
+        </div>
+    </div>
+    
+    <script src="simulation.js"></script>
+</body>
+</html>

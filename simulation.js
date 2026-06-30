@@ -269,6 +269,22 @@ function runSimulation() {
     
     let globalTradeIndex = 1;
 
+    // Shuffle Bag generator for realistic distribution
+    function createShuffledDeck(wr) {
+        let deck = [];
+        const wins = Math.round(wr);
+        const losses = 100 - wins;
+        for (let i = 0; i < wins; i++) deck.push(true);
+        for (let i = 0; i < losses; i++) deck.push(false);
+        // Fisher-Yates Shuffle
+        for (let i = deck.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [deck[i], deck[j]] = [deck[j], deck[i]];
+        }
+        return deck;
+    }
+    let currentDeck = createShuffledDeck(winRate);
+
     // Loop until we hit target or go broke
     while (currentBalance < targetBalance && currentBalance > 0 && days < maxDaysLimit && totalTrades < maxTradesLimit) {
         days++;
@@ -297,21 +313,12 @@ function runSimulation() {
             if (risk > maxRiskCap) risk = maxRiskCap;
             if (risk > currentBalance + dailyPnL) risk = currentBalance + dailyPnL; // Can't risk more than account balance
 
-            // Roll Win/Loss with +/- 3% variance constraint
-            let currentWinProb = winRate;
-            if (totalTrades > 10) {
-                const currentActualWr = (totalWins / totalTrades) * 100;
-                const deviation = currentActualWr - winRate;
-                // If it strays more than 3%, forcefully rubber-band it back
-                if (deviation > 3) currentWinProb = winRate - 25;
-                else if (deviation < -3) currentWinProb = winRate + 25;
-                else currentWinProb = winRate - (deviation * 1.5);
+            // Roll Win/Loss using Shuffle Bag for uniform realistic distribution
+            if (currentDeck.length === 0) {
+                currentDeck = createShuffledDeck(winRate);
             }
+            const isWin = currentDeck.pop();
             
-            // Clamp probability bounds
-            currentWinProb = Math.max(0, Math.min(100, currentWinProb));
-            
-            const isWin = (Math.random() * 100) < currentWinProb;
             let rr = 1.0;
             if (isWin) {
                 if (rrType === 'fixed') rr = rrFixed;
